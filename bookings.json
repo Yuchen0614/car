@@ -1,0 +1,632 @@
+[
+  {
+    "id": "1",
+    "department": "開發部",
+    "name": "Ping",
+    "date": "2025-05-08",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "開發"
+  },
+  {
+    "id": "3",
+    "department": "組裝課",
+    "name": "葉志明",
+    "date": "2025-05-15",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "外訓"
+  },
+  {
+    "id": "5",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-05-09",
+    "startTime": "13:00",
+    "endTime": "16:00",
+    "reason": "採買"
+  },
+  {
+    "id": "6",
+    "department": "開發部",
+    "name": "Ping",
+    "date": "2025-05-09",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "reason": "RD"
+  },
+  {
+    "id": "7",
+    "department": "業務部",
+    "name": "andy",
+    "date": "2025-05-12",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "真納視覺"
+  },
+  {
+    "id": "9",
+    "department": "開發部",
+    "name": "郭婉容、JAMES",
+    "date": "2025-05-14",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "銅鍛造 供應商 先期訪問"
+  },
+  {
+    "id": "11",
+    "department": "品保部",
+    "name": "蔡青安",
+    "date": "2025-05-16",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "對色燈箱購買前確認"
+  },
+  {
+    "id": "11",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-05-13",
+    "startTime": "09:00",
+    "endTime": "10:00",
+    "reason": "郵局/拜拜"
+  },
+  {
+    "id": "12",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-05-13",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "樣品"
+  },
+  {
+    "id": "12",
+    "department": "品保部",
+    "name": "青安",
+    "date": "2025-05-13",
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "reason": "大里"
+  },
+  {
+    "id": "12",
+    "department": "開發部",
+    "name": "馮靖雯",
+    "date": "2025-05-16",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "長春移轉模具至盛合"
+  },
+  {
+    "id": "14",
+    "department": "開發部",
+    "name": "薛建坪",
+    "date": "2025-05-19",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "reason": "巨川確認樣品"
+  },
+  {
+    "id": "15",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-05-20",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "M163樣品"
+  },
+  {
+    "id": "16",
+    "department": "生產部",
+    "name": "林信良",
+    "date": "2025-05-29",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "精實管理課程"
+  },
+  {
+    "id": "15",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-05-26",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "立管樣品"
+  },
+  {
+    "id": "16",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-05-26",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "供應商拜訪-勤鍛"
+  },
+  {
+    "id": "17",
+    "department": "開發部",
+    "name": "鄭盈靜/洪英鈞",
+    "date": "2025-05-27",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "reason": "供應商拜訪"
+  },
+  {
+    "id": "18",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-05-27",
+    "startTime": "16:00",
+    "endTime": "17:00",
+    "reason": "M230樣品"
+  },
+  {
+    "id": "19",
+    "department": "業務部",
+    "name": "陳柏融",
+    "date": "2025-06-06",
+    "startTime": "08:00",
+    "endTime": "18:00",
+    "reason": "教育訓練課程"
+  },
+  {
+    "id": "20",
+    "department": "品保部",
+    "name": "蔡青安、林佳德",
+    "date": "2025-06-10",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "教育訓練課程"
+  },
+  {
+    "id": "21",
+    "department": "加工課",
+    "name": "王榮琦",
+    "date": "2025-05-28",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "放電廠商"
+  },
+  {
+    "id": "22",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-06-02",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "M230樣品"
+  },
+  {
+    "id": "23",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-05",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "採買"
+  },
+  {
+    "id": "24",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-02",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "送支票"
+  },
+  {
+    "id": "25",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-06-03",
+    "startTime": "11:00",
+    "endTime": "12:00",
+    "reason": "B732樣品-威燁"
+  },
+  {
+    "id": "26",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-03",
+    "startTime": "15:00",
+    "endTime": "17:00",
+    "reason": "宏典確認樣品"
+  },
+  {
+    "id": "27",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-06-04",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "多元利送樣品彩色電著"
+  },
+  {
+    "id": "29",
+    "department": "生管部",
+    "name": "洪英均",
+    "date": "2025-06-05",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "reason": "威曄"
+  },
+  {
+    "id": "29",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-05",
+    "startTime": "16:00",
+    "endTime": "17:00",
+    "reason": "宏典確認樣品"
+  },
+  {
+    "id": "30",
+    "department": "生管部",
+    "name": "黎雅慧",
+    "date": "2025-06-09",
+    "startTime": "09:00",
+    "endTime": "11:00",
+    "reason": "與品保人員至威燁載B761本體檢驗後直送竣淵陽極 "
+  },
+  {
+    "id": "31",
+    "department": "品保部",
+    "name": "蔡青安",
+    "date": "2025-06-12",
+    "startTime": "13:00",
+    "endTime": "16:00",
+    "reason": "竣淵討論異常"
+  },
+  {
+    "id": "32",
+    "department": "品保部",
+    "name": "葉閔汝",
+    "date": "2025-06-09",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "S9 軸心研磨測試"
+  },
+  {
+    "id": "33",
+    "department": "品保部",
+    "name": "葉閔汝",
+    "date": "2025-06-09",
+    "startTime": "15:00",
+    "endTime": "16:00",
+    "reason": "S9 軸心研磨測試"
+  },
+  {
+    "id": "34",
+    "department": "業務部",
+    "name": "陳柏融",
+    "date": "2025-06-11",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "監理所"
+  },
+  {
+    "id": "36",
+    "department": "生產部",
+    "name": "蕭雅竹",
+    "date": "2025-06-26",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "三位一體課程外訓：績效管理技巧與實務"
+  },
+  {
+    "id": "36",
+    "department": "品保部",
+    "name": "蔡青安",
+    "date": "2025-06-11",
+    "startTime": "13:00",
+    "endTime": "16:00",
+    "reason": "瑞欣"
+  },
+  {
+    "id": "37",
+    "department": "生產部",
+    "name": "蕭雅竹",
+    "date": "2025-07-08",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "三位一體課程-無動力裝置應用"
+  },
+  {
+    "id": "38",
+    "department": "業務部",
+    "name": "nita",
+    "date": "2025-06-12",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "浩捍客訴"
+  },
+  {
+    "id": "40",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-13",
+    "startTime": "16:00",
+    "endTime": "18:00",
+    "reason": "凌威討論包裝,宏典確認樣品"
+  },
+  {
+    "id": "41",
+    "department": "開發部",
+    "name": "吳銘賓",
+    "date": "2025-06-17",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "reason": "微程式-功率計組裝及問題點討論及測試"
+  },
+  {
+    "id": "42",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-16",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "送樣品"
+  },
+  {
+    "id": "43",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-16",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "採買"
+  },
+  {
+    "id": "44",
+    "department": "資訊室",
+    "name": "盧卡斯",
+    "date": "2025-06-20",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "朝陽科大資訊學院"
+  },
+  {
+    "id": "45",
+    "department": "開發部",
+    "name": "馮靖雯",
+    "date": "2025-06-23",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "reason": "去雲林竟閎討論對鎖式座管3D鍛造和電子座管3D鍛造"
+  },
+  {
+    "id": "46",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-06-18",
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "reason": "雷雕B725D"
+  },
+  {
+    "id": "47",
+    "department": "加工課",
+    "name": "王榮琦",
+    "date": "2025-06-18",
+    "startTime": "13:00",
+    "endTime": "14:00",
+    "reason": "放電"
+  },
+  {
+    "id": "48",
+    "department": "開發部",
+    "name": "吳銘賓",
+    "date": "2025-06-19",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "reason": "彰化-鐘準討論壓鑄相關事宜"
+  },
+  {
+    "id": "49",
+    "department": "加工課",
+    "name": "王榮琦",
+    "date": "2025-06-18",
+    "startTime": "14:00",
+    "endTime": "15:00",
+    "reason": "放電"
+  },
+  {
+    "id": "50",
+    "department": "開發部",
+    "name": "馮靖雯",
+    "date": "2025-06-18",
+    "startTime": "15:00",
+    "endTime": "17:00",
+    "reason": "宏典拿樣品並討論LOCKRING加工重點"
+  },
+  {
+    "id": "51",
+    "department": "開發部",
+    "name": "馮靖雯",
+    "date": "2025-06-20",
+    "startTime": "08:00",
+    "endTime": "13:00",
+    "reason": "台中微程式測試電子座管"
+  },
+  {
+    "id": "52",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-19",
+    "startTime": "13:00",
+    "endTime": "14:00",
+    "reason": "採買"
+  },
+  {
+    "id": "53",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-19",
+    "startTime": "15:00",
+    "endTime": "17:00",
+    "reason": "竣淵取樣品"
+  },
+  {
+    "id": "54",
+    "department": "管理部",
+    "name": "黃泰源",
+    "date": "2025-07-03",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "參加廠協會講座"
+  },
+  {
+    "id": "55",
+    "department": "開發部",
+    "name": "鄭盈靜",
+    "date": "2025-06-24",
+    "startTime": "08:00",
+    "endTime": "09:00",
+    "reason": "凌葳-M165樣品"
+  },
+  {
+    "id": "56",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-06-24",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "誠美/閎茂"
+  },
+  {
+    "id": "57",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-06-24",
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "reason": "凌威取樣品\n竣淵確認立管"
+  },
+  {
+    "id": "58",
+    "department": "管理部",
+    "name": "黃泰源",
+    "date": "2025-07-02",
+    "startTime": "08:00",
+    "endTime": "10:00",
+    "reason": "參加公祭"
+  },
+  {
+    "id": "58",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-25",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "採買"
+  },
+  {
+    "id": "59",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-06-25",
+    "startTime": "15:00",
+    "endTime": "17:00",
+    "reason": "凌葳"
+  },
+  {
+    "id": "60",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-06-27",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "reason": "銀行"
+  },
+  {
+    "id": "61",
+    "department": "生管部",
+    "name": "洪英鈞",
+    "date": "2025-06-30",
+    "startTime": "08:00",
+    "endTime": "10:00",
+    "reason": "取貨"
+  },
+  {
+    "id": "62",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-06-30",
+    "startTime": "10:00",
+    "endTime": "15:00",
+    "reason": "玖振"
+  },
+  {
+    "id": "63",
+    "department": "品保部",
+    "name": "蔡青安、洪英鈞",
+    "date": "2025-07-01",
+    "startTime": "10:00",
+    "endTime": "13:00",
+    "reason": "誠美討論勾片氧化"
+  },
+  {
+    "id": "64",
+    "department": "加工課",
+    "name": "王榮琦",
+    "date": "2025-07-02",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "reason": "放電"
+  },
+  {
+    "id": "65",
+    "department": "開發部",
+    "name": "郭婉容",
+    "date": "2025-07-01",
+    "startTime": "15:00",
+    "endTime": "16:00",
+    "reason": "郵局\n"
+  },
+  {
+    "id": "66",
+    "department": "開發部",
+    "name": "薛建平",
+    "date": "2025-07-02",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "確認樣品"
+  },
+  {
+    "id": "67",
+    "department": "開發部",
+    "name": "林佳德",
+    "date": "2025-07-02",
+    "startTime": "15:00",
+    "endTime": "17:00",
+    "reason": "樺新"
+  },
+  {
+    "id": "69",
+    "department": "管理部",
+    "name": "吳恩恩",
+    "date": "2025-07-25",
+    "startTime": "13:00",
+    "endTime": "15:00",
+    "reason": "採買"
+  },
+  {
+    "id": "70",
+    "department": "開發部",
+    "name": "林佳德",
+    "date": "2025-07-04",
+    "startTime": "09:00",
+    "endTime": "14:00",
+    "reason": "B732 拋光等級測試"
+  },
+  {
+    "id": "70",
+    "department": "開發部",
+    "name": "林佳德",
+    "date": "2025-07-09",
+    "startTime": "13:00",
+    "endTime": "16:00",
+    "reason": "拋光樣品 取樣(宏鎰-太平)"
+  }
+]
