@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>新可大公務車預約</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f3f4f6 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 90vw;
+      margin: 2vh auto;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    .container.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .container:hover {
+      transform: translateY(-3px);
+    }
+
+    h2, h3 {
+      color: #3b82f6;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #4b5563;
+      font-size: 0.9rem;
+    }
+
+    .form-control, .form-select, textarea {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+      font-size: 0.9rem;
+      padding: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus, .form-select:focus, textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+      transform: scale(1.02);
+      outline: none;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      border: none;
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .calendar-container {
+      max-width: 90vw;
+      margin: 2vh auto;
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    .calendar-container.fade-in {
+      opacity: 1;
+    }
+
+    #calendar {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      overflow: hidden;
+    }
+
+    .fc-daygrid-day {
+      border-radius: 8px;
+      transition: filter 0.2s ease, transform 0.2s ease;
+      position: relative;
+    }
+
+    .fc-daygrid-day.bg-booked {
+      border: 2px solid #f97316;
+    }
+
+    .fc-daygrid-day.bg-booked .fc-daygrid-day-frame {
+      background: #f97316 !important;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      padding: 2px;
+    }
+
+    .fc-daygrid-day.available .fc-daygrid-day-frame {
+      background: #ffffff !important;
+      border-radius: 8px;
+    }
+
+    .fc-daygrid-day.today {
+      border: 3px solid #3b82f6;
+    }
+
+    .fc-daygrid-day.bg-booked .fc-daygrid-day-frame::after {
+      content: '🚗';
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      opacity: 0.8;
+      color: #ffffff;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .fc-daygrid-day.bg-booked.long-booking .fc-daygrid-day-frame::after {
+      content: '🚌';
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      opacity: 0.8;
+      color: #ffffff;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .fc-daygrid-day:hover {
+      filter: brightness(1.1);
+      cursor: pointer;
+    }
+
+    .fc-daygrid-day:active {
+      animation: clickScale 0.2s ease;
+    }
+
+    .fc-daygrid-day-number {
+      font-weight: 500;
+      color: #1f2937;
+      font-size: 0.85rem;
+    }
+
+    .fc-daygrid-day-frame {
+      border-radius: 8px;
+      min-height: 50px;
+      position: relative;
+    }
+
+    .fc-button {
+      background: #3b82f6 !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 0.4rem 0.8rem !important;
+      font-weight: 500 !important;
+      font-size: 0.85rem !important;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .fc-button:hover {
+      background: #2563eb !important;
+      transform: scale(1.05) !important;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+    }
+
+    .fc-toolbar-title {
+      font-size: 1rem !important;
+      color: #1f2937;
+    }
+
+    .no-bookings {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7280;
+    }
+
+    .no-bookings svg {
+      width: 2.5rem;
+      height: 2.5rem;
+      fill: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+
+    .no-bookings p {
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 1rem;
+      display: none;
+      color: #3b82f6;
+      font-size: 0.9rem;
+    }
+
+    #bookings-list {
+      padding: 1rem;
+    }
+
+    .booking-card {
+      display: flex;
+      align-items: center;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      transition: background 0.2s ease;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      animation: slideIn 0.5s ease forwards;
+    }
+
+    .booking-card:hover {
+      background: #f3f4f6;
+    }
+
+    .booking-info {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #1f2937;
+      align-items: center;
+    }
+
+    .booking-info div {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      min-width: 80px;
+      flex: 1;
+    }
+
+    .booking-info svg {
+      width: 1rem;
+      height: 1rem;
+      fill: #3b82f6;
+    }
+
+    .cancel-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .modal-content {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    .modal-header {
+      background: #3b82f6;
+      color: #ffffff;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .modal-title {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .modal-footer {
+      border-top: none;
+      padding: 0.8rem;
+    }
+
+    .modal-footer .btn {
+      font-size: 0.85rem;
+    }
+
+    .timeline-container {
+      margin: 1rem 0;
+      padding: 0.5rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      position: relative;
+      height: 80px;
+    }
+
+    .timeline {
+      position: relative;
+      height: 100%;
+      border-bottom: 1px solid #d1d5db;
+    }
+
+    .timeline-ticks {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      top: -20px;
+      width: 100%;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    .timeline-tick {
+      text-align: center;
+      width: 7.69%; /* 100% / 13 hours */
+    }
+
+    .timeline-bar {
+      position: absolute;
+      height: 20px;
+      background: #3b82f6;
+      border-radius: 4px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      color: #ffffff;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      animation: growWidth 1s ease-in-out forwards;
+      width: 0; /* 初始寬度為 0 */
+    }
+
+    .timeline-bar:hover {
+      background: #2563eb;
+      transform: scale(1.02);
+    }
+
+    /* 動畫定義 */
+    @keyframes slideIn {
+      from {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes clickScale {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0.95);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateX(-50%);
+      }
+      50% {
+        transform: translate(-50%, -8px);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes growWidth {
+      from {
+        width: 0;
+      }
+      to {
+        width: var(--final-width); /* 使用 CSS 變量來設置最終寬度 */
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+      }
+
+      .container, .calendar-container {
+        max-width: 95vw;
+        margin: 1.5vh auto;
+        padding: 1.5rem;
+      }
+
+      h2, h3 {
+        font-size: 1.3rem;
+      }
+
+      .form-label {
+        font-size: 0.85rem;
+      }
+
+      .form-control, .form-select, textarea {
+        font-size: 0.85rem;
+        padding: 0.4rem;
+      }
+
+      .btn-primary, .btn-secondary, .btn-danger {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      #calendar {
+        font-size: 0.8rem;
+      }
+
+      .fc-daygrid-day-frame {
+        min-height: 40px;
+      }
+
+      .fc-daygrid-day-number {
+        font-size: 0.75rem;
+      }
+
+      .fc-daygrid-day.bg-booked .fc-daygrid-day-frame::after,
+      .fc-daygrid-day.bg-booked.long-booking .fc-daygrid-day-frame::after {
+        font-size: 1rem;
+      }
+
+      .fc-button {
+        padding: 0.3rem 0.6rem !important;
+        font-size: 0.8rem !important;
+      }
+
+      .fc-toolbar-title {
+        font-size: 0.9rem !important;
+      }
+
+      .modal-dialog {
+        margin: 0.5rem;
+        max-width: 95vw;
+      }
+
+      .modal-body {
+        padding: 0.8rem;
+      }
+
+      .booking-info {
+        font-size: 0.8rem;
+        flex-wrap: wrap;
+      }
+
+      .booking-info div {
+        min-width: 100px;
+        flex: 1 1 45%;
+      }
+
+      .cancel-btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      .timeline-container {
+        height: 60px;
+      }
+
+      .timeline-ticks {
+        font-size: 0.7rem;
+      }
+
+      .timeline-bar {
+        height: 16px;
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      body {
+        font-size: 12px;
+      }
+
+      .container, .calendar-container {
+        max-width: 98vw;
+        margin: 1vh auto;
+        padding: 1rem;
+      }
+
+      h2, h3 {
+        font-size: 1.1rem;
+      }
+
+      .form-control, .form-select, textarea {
+        font-size: 0.8rem;
+      }
+
+      #calendar {
+        font-size: 0.7rem;
+      }
+
+      .fc-daygrid-day-frame {
+        min-height: 35px;
+      }
+
+      .fc-daygrid-day-number {
+        font-size: 0.7rem;
+      }
+
+      .fc-daygrid-day.bg-booked .fc-daygrid-day-frame::after,
+      .fc-daygrid-day.bg-booked.long-booking .fc-daygrid-day-frame::after {
+        font-size: 0.9rem;
+      }
+
+      .fc-button {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.7rem !important;
+      }
+
+      .fc-toolbar-title {
+        font-size: 0.8rem !important;
+      }
+
+      .booking-info {
+        font-size: 0.75rem;
+      }
+
+      .booking-info div {
+        flex: 1 1 100%;
+      }
+
+      .booking-info svg {
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+
+      .timeline-container {
+        height: 50px;
+      }
+
+      .timeline-ticks {
+        font-size: 0.65rem;
+      }
+
+      .timeline-bar {
+        height: 14px;
+        font-size: 0.6rem;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container, .calendar-container {
+        max-width: 80vw;
+      }
+
+      h2, h3 {
+        font-size: 1.8rem;
+      }
+
+      .form-control, .form-select, textarea {
+        font-size: 1rem;
+      }
+
+      .btn-primary, .btn-secondary, .btn-danger {
+        font-size: 1rem;
+      }
+
+      .timeline-ticks {
+        font-size: 0.8rem;
+      }
+
+      .timeline-bar {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container fade-in" id="login-container">
+    <h2 class="text-center mb-4">登入</h2>
+    <form id="login-form">
+      <div class="mb-3">
+        <label for="username" class="form-label">用戶名</label>
+        <input type="text" class="form-control" id="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">密碼</label>
+        <input type="password" class="form-control" id="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">登入</button>
+    </form>
+  </div>
+
+  <div class="container" id="booking-container" style="display: none;">
+    <h2 class="text-center mb-4">新可大公務車預約</h2>
+    <form id="booking-form">
+      <div class="mb-3">
+        <label for="department" class="form-label">部門</label>
+        <select class="form-select" id="department" required>
+          <option value="">請選擇部門</option>
+          <option value="總經理室">總經理室</option>
+          <option value="改善事務局">改善事務局</option>
+          <option value="資訊室">資訊室</option>
+          <option value="管理部">管理部</option>
+          <option value="財務部">財務部</option>
+          <option value="業務部">業務部</option>
+          <option value="品保部">品保部</option>
+          <option value="生管部">生管部</option>
+          <option value="倉管課">倉管課</option>
+          <option value="開發部">開發部</option>
+          <option value="生產部">生產部</option>
+          <option value="加工課">加工課</option>
+          <option value="組裝課">組裝課</option>
+          <option value="生技課">生技課</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label">姓名</label>
+        <input type="text" class="form-control" id="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="date" class="form-label">日期</label>
+        <input type="date" class="form-control" id="date" required>
+      </div>
+      <div class="mb-3">
+        <label for="start-time" class="form-label">開始時間</label>
+        <select class="form-select" id="start-time" required>
+          <option value="">請選擇開始時間</option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="end-time" class="form-label">結束時間</label>
+        <select class="form-select" id="end-time" required>
+          <option value="">請選擇結束時間</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="reason" class="form-label">公出原因</label>
+        <textarea class="form-control" id="reason" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">提交預約</button>
+    </form>
+    <button class="btn btn-secondary w-100 mt-3" id="logout">登出</button>
+  </div>
+
+  <div class="calendar-container" id="calendar-container" style="display: none;">
+    <h3 class="text-center mb-4">預約日曆</h3>
+    <button class="btn btn-primary mt-2" id="refresh-calendar">刷新日曆</button>
+    <div id="calendar"></div>
+  </div>
+
+  <!-- Modal for displaying bookings -->
+  <div class="modal fade" id="bookingsModal" tabindex="-1" aria-labelledby="bookingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingsModalLabel">當天預約詳情</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="loading">載入中...</div>
+          <div id="timeline-container" class="timeline-container" style="display: none;"></div>
+          <div id="bookings-list"></div>
+          <div id="no-bookings" class="no-bookings" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm3 3H4v13h16V6zm-10 7h4v4h-4v-4z"/></svg>
+            <p>當天無預約</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for cancel confirmation -->
+  <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelModalLabel">確認取消預約</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>請輸入取消密碼以確認取消預約</p>
+          <form id="cancel-form">
+            <div class="mb-3">
+              <label for="cancel-password" class="form-label">取消密碼</label>
+              <input type="password" class="form-control" id="cancel-password" required>
+            </div>
+            <input type="hidden" id="cancel-booking-id">
+            <button type="submit" class="btn btn-danger w-100">確認取消</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <script>
+    // 全局變數和常量
+    const loginContainer = document.getElementById('login-container');
+    const bookingContainer = document.getElementById('booking-container');
+    const calendarContainer = document.getElementById('calendar-container');
+    const loginForm = document.getElementById('login-form');
+    const bookingForm = document.getElementById('booking-form');
+    const cancelForm = document.getElementById('cancel-form');
+    const logoutBtn = document.getElementById('logout');
+    const dateInput = document.getElementById('date');
+    const startTimeSelect = document.getElementById('start-time');
+    const endTimeSelect = document.getElementById('end-time');
+    const bookingsModal = new bootstrap.Modal(document.getElementById('bookingsModal'));
+    const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+
+    let mockBookings = [
+      { id: '1', department: '管理部', name: '0000', date: '2025-05-08', startTime: '11:00', endTime: '15:00', reason: '會議' },
+      { id: '2', department: '管理部', name: '0000', date: '2025-05-08', startTime: '09:00', endTime: '10:00', reason: '拜訪客戶' }
+    ];
+
+    const timeSlots = [
+      '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+      '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
+    ];
+
+    const users = [
+      { username: "S1234", password: "S1234" },
+      { username: "00000", password: "00000" }
+    ];
+
+    // 快取相關變數
+    let cachedBookings = null;
+    let cacheTimestamp = null;
+    const CACHE_DURATION = 60 * 1000; // 1 分鐘
+
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+
+    // === 模組：認証相關 (auth.js) ===
+    function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
+        localStorage.setItem('token', 'mock-token');
+        localStorage.setItem('username', username);
+        loginContainer.style.display = 'none';
+        bookingContainer.style.display = 'block';
+        calendarContainer.style.display = 'block';
+        bookingContainer.classList.add('fade-in');
+        calendarContainer.classList.add('fade-in');
+        setupCalendarObserver();
+      } else {
+        alert('用戶名或密碼錯誤');
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      cachedBookings = null;
+      cacheTimestamp = null;
+      bookingContainer.style.display = 'none';
+      calendarContainer.style.display = 'none';
+      loginContainer.style.display = 'block';
+      loginContainer.classList.add('fade-in');
+    }
+
+    // === 模組：預約相關 (booking.js) ===
+    async function fetchBookings() {
+      const now = Date.now();
+      if (cachedBookings && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
+        console.log('Returning cached bookings:', cachedBookings);
+        return cachedBookings;
+      }
+
+      try {
+        const response = await fetch('/api/bookings');
+        if (!response.ok) {
+          console.warn(`無法載入預約資料，狀態碼：${response.status}`);
+          cachedBookings = mockBookings;
+          cacheTimestamp = now;
+          console.log('Falling back to mockBookings:', mockBookings);
+          return mockBookings;
+        }
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('伺服器返回的不是 JSON 格式');
+          cachedBookings = mockBookings;
+          cacheTimestamp = now;
+          console.log('Falling back to mockBookings:', mockBookings);
+          return mockBookings;
+        }
+        cachedBookings = await response.json();
+        cacheTimestamp = now;
+        console.log('Fetched bookings from server:', cachedBookings);
+        return cachedBookings;
+      } catch (error) {
+        console.error('Error fetching bookings from server:', error);
+        cachedBookings = mockBookings;
+        cacheTimestamp = now;
+        console.log('Falling back to mockBookings:', mockBookings);
+        return mockBookings;
+      }
+    }
+
+    const toMinutes = (time) => {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const isConflict = (newStart, newEnd, existingStart, existingEnd) => {
+      const newStartMin = toMinutes(newStart);
+      const newEndMin = toMinutes(newEnd);
+      const existingStartMin = toMinutes(existingStart);
+      const existingEndMin = toMinutes(existingEnd);
+      return !(newEndMin <= existingStartMin || newStartMin >= existingEndMin);
+    };
+
+    async function handleBookingSubmit(e) {
+      e.preventDefault();
+      const startTime = startTimeSelect.value;
+      const endTime = endTimeSelect.value;
+      const selectedDate = dateInput.value;
+
+      const todayDate = new Date();
+      todayDate.setHours(0, 0, 0, 0);
+      const bookingDate = new Date(selectedDate);
+
+      if (bookingDate < todayDate) {
+        alert('無法預約過去的日期，請選擇未來的日期');
+        return;
+      }
+
+      if (!startTime || !endTime || startTime >= endTime) {
+        alert('請選擇有效的時間區段（結束時間必須晚於開始時間）');
+        return;
+      }
+
+      const bookings = await fetchBookings();
+      const filteredBookings = bookings.filter(b => b.date === selectedDate);
+
+      let hasConflict = false;
+      for (const booking of filteredBookings) {
+        if (isConflict(startTime, endTime, booking.startTime, booking.endTime)) {
+          hasConflict = true;
+          break;
+        }
+      }
+
+      if (hasConflict) {
+        alert('所選時間區段與現有預約衝突，請選擇其他時間');
+        return;
+      }
+
+      const booking = {
+        id: Date.now().toString(),
+        department: document.getElementById('department').value,
+        name: document.getElementById('name').value,
+        date: selectedDate,
+        startTime: startTime,
+        endTime: endTime,
+        reason: document.getElementById('reason').value
+      };
+
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(booking)
+        });
+        if (!response.ok) {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '提交預約失敗');
+          } else {
+            console.warn('伺服器返回的不是 JSON 格式，模擬提交');
+            mockBookings.push(booking);
+            cachedBookings = [...mockBookings];
+            cacheTimestamp = Date.now();
+            console.log('After booking submit, mockBookings:', mockBookings);
+            console.log('After booking submit, cachedBookings:', cachedBookings);
+            alert('預約提交成功（模擬）');
+            bookingForm.reset();
+            const calendarEl = document.getElementById('calendar');
+            const calendar = calendarEl._calendar;
+            if (calendar) {
+              calendar.getEvents().forEach(event => event.remove());
+              calendar.render();
+            }
+            await updateCalendarColors();
+            return;
+          }
+        }
+        mockBookings.push(booking);
+        cachedBookings = [...mockBookings];
+        cacheTimestamp = Date.now();
+        console.log('After booking submit, mockBookings:', mockBookings);
+        console.log('After booking submit, cachedBookings:', cachedBookings);
+        alert('預約提交成功');
+        bookingForm.reset();
+        const calendarEl = document.getElementById('calendar');
+        const calendar = calendarEl._calendar;
+        if (calendar) {
+          calendar.getEvents().forEach(event => event.remove());
+          calendar.render();
+        }
+        await updateCalendarColors();
+      } catch (error) {
+        console.error('Error submitting booking:', error);
+        alert('提交預約失敗：' + error.message);
+      }
+    }
+
+    async function handleCancelSubmit(e) {
+      e.preventDefault();
+      const password = document.getElementById('cancel-password').value;
+      const bookingId = document.getElementById('cancel-booking-id').value;
+
+      if (!bookingId) {
+        alert('錯誤：無效的預約ID');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('錯誤：未找到身份驗證令牌，請重新登錄');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        bookingContainer.style.display = 'none';
+        calendarContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        loginContainer.classList.add('fade-in');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/bookings/${bookingId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        if (!response.ok) {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '取消預約失敗');
+          } else {
+            console.warn('伺服器返回的不是 JSON 格式，模擬取消');
+            mockBookings = mockBookings.filter(b => b.id !== bookingId);
+            cachedBookings = [...mockBookings];
+            cacheTimestamp = Date.now();
+            console.log('After cancel, mockBookings:', mockBookings);
+            console.log('After cancel, cachedBookings:', cachedBookings);
+            alert('預約已成功取消（模擬）');
+            cancelModal.hide();
+            document.getElementById('cancel-password').value = '';
+            const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
+            const bookings = await fetchBookings();
+            const filteredBookings = bookings.filter(b => b.date === selectedDate);
+            renderBookingsList(filteredBookings, selectedDate);
+            const calendarEl = document.getElementById('calendar');
+            const calendar = calendarEl._calendar;
+            if (calendar) {
+              calendar.getEvents().forEach(event => event.remove());
+              calendar.render();
+            }
+            await updateCalendarColors();
+            return;
+          }
+        }
+        mockBookings = mockBookings.filter(b => b.id !== bookingId);
+        cachedBookings = [...mockBookings];
+        cacheTimestamp = Date.now();
+        console.log('After cancel, mockBookings:', mockBookings);
+        console.log('After cancel, cachedBookings:', cachedBookings);
+        alert('預約已成功取消');
+        cancelModal.hide();
+        document.getElementById('cancel-password').value = '';
+        const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
+        const bookings = await fetchBookings();
+        const filteredBookings = bookings.filter(b => b.date === selectedDate);
+        renderBookingsList(filteredBookings, selectedDate);
+        const calendarEl = document.getElementById('calendar');
+        const calendar = calendarEl._calendar;
+        if (calendar) {
+          calendar.getEvents().forEach(event => event.remove());
+          calendar.render();
+        }
+        await updateCalendarColors();
+      } catch (error) {
+        console.error('Error canceling booking:', error);
+        alert('取消預約失敗：' + error.message);
+      }
+    }
+
+    function renderBookingsList(bookings, date) {
+      const bookingsList = document.getElementById('bookings-list');
+      const noBookings = document.getElementById('no-bookings');
+      const timelineContainer = document.getElementById('timeline-container');
+
+      if (bookings.length === 0) {
+        bookingsList.style.display = 'none';
+        timelineContainer.style.display = 'none';
+        noBookings.style.display = 'block';
+        noBookings.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm3 3H4v13h16V6zm-10 7h4v4h-4v-4z"/></svg><p>當天無預約</p>';
+        return;
+      }
+
+      bookingsList.style.display = 'block';
+      timelineContainer.style.display = 'block';
+      noBookings.style.display = 'none';
+
+      // 渲染時間軸
+      const totalHours = timeSlots.length - 1; // 08:00 to 21:00 = 13 hours
+      timelineContainer.innerHTML = `
+        <div class="timeline">
+          <div class="timeline-ticks">
+            ${timeSlots.map(slot => `<div class="timeline-tick">${slot}</div>`).join('')}
+          </div>
+          ${bookings.map(booking => {
+            const startIndex = timeSlots.indexOf(booking.startTime);
+            const endIndex = timeSlots.indexOf(booking.endTime);
+            const left = (startIndex / totalHours) * 100;
+            const width = ((endIndex - startIndex) / totalHours) * 100;
+            return `
+              <div class="timeline-bar" style="left: ${left}%; --final-width: ${width}%;" 
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="${booking.department} (${booking.name}) ${booking.startTime}-${booking.endTime}: ${booking.reason}">
+                ${booking.department}
+              </div>`;
+          }).join('')}
+        </div>
+      `;
+
+      // 初始化工具提示
+      const tooltipTriggerList = timelineContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
+      tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+      bookings.sort((a, b) => {
+        const aSum = toMinutes(a.startTime) + toMinutes(a.endTime);
+        const bSum = toMinutes(b.startTime) + toMinutes(b.endTime);
+        return aSum - bSum;
+      });
+
+      bookingsList.innerHTML = bookings.map((booking, index) => {
+        const bookingId = booking.id;
+        if (!bookingId) {
+          console.warn('預約缺少 id 屬性:', booking);
+          return `
+            <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
+              <div class="booking-info">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
+                  ${booking.department}
+                </div>
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
+                  ${booking.name}
+                </div>
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
+                  ${booking.startTime}-${booking.endTime}
+                </div>
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+                  ${booking.reason}
+                </div>
+              </div>
+              <span class="text-danger cancel-btn">無法取消</span>
+            </div>`;
+        }
+        return `
+          <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
+            <div class="booking-info">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
+                ${booking.department}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
+                ${booking.name}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
+                ${booking.startTime}-${booking.endTime}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+                ${booking.reason}
+              </div>
+            </div>
+            <button class="btn btn-danger cancel-btn" data-booking-id="${bookingId}" onclick="showCancelModal('${bookingId}')">取消</button>
+          </div>`;
+      }).join('');
+    }
+
+    function showCancelModal(bookingId) {
+      if (!bookingId) {
+        console.error('showCancelModal 接收到無效的 bookingId:', bookingId);
+        alert('錯誤：無法顯示取消視窗，預約ID無效');
+        return;
+      }
+      const cancelBookingIdInput = document.getElementById('cancel-booking-id');
+      cancelBookingIdInput.value = bookingId;
+      console.log('設定 cancel-booking-id 為:', cancelBookingIdInput.value);
+      cancelModal.show();
+    }
+
+    // === 模組：日曆相關 (calendar.js) ===
+    function initCalendar() {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        initialDate: new Date(),
+        dateClick: async function(info) {
+          const selectedDate = info.dateStr;
+          document.querySelector('.loading').style.display = 'block';
+          document.getElementById('bookings-list').style.display = 'none';
+          document.getElementById('no-bookings').style.display = 'none';
+          document.getElementById('timeline-container').style.display = 'none';
+          try {
+            const bookings = await fetchBookings();
+            const filteredBookings = bookings.filter(b => b.date === selectedDate);
+            renderBookingsList(filteredBookings, selectedDate);
+            document.getElementById('bookingsModalLabel').textContent = `${selectedDate} 的預約`;
+            document.querySelector('.loading').style.display = 'none';
+            bookingsModal.show();
+          } catch (error) {
+            console.error('載入預約錯誤:', error);
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById('no-bookings').style.display = 'block';
+            document.getElementById('no-bookings').innerHTML = '<p>無法載入預約資料：' + error.message + '</p>';
+          }
+        },
+        events: [],
+        datesSet: async function(info) {
+          await updateCalendarColors();
+        }
+      });
+      calendar.render();
+      calendarEl._calendar = calendar;
+
+      calendarEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const activeElement = document.activeElement;
+          if (activeElement.classList.contains('fc-daygrid-day')) {
+            const date = activeElement.getAttribute('data-date');
+            calendar.select(date);
+            activeElement.click();
+          }
+        }
+      });
+    }
+
+    async function updateCalendarColors() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('錯誤：未找到身份驗證令牌，請重新登錄');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        bookingContainer.style.display = 'none';
+        calendarContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        loginContainer.classList.add('fade-in');
+        return;
+      }
+
+      const bookings = await fetchBookings();
+      console.log('Updating calendar with bookings:', bookings);
+      const calendarEl = document.getElementById('calendar');
+      const calendar = calendarEl._calendar;
+      if (!calendar) {
+        console.warn('Calendar not initialized');
+        return;
+      }
+
+      calendar.getEvents().forEach(event => event.remove());
+
+      bookings.forEach(booking => {
+        const startTime = booking.startTime;
+        const endTime = booking.endTime;
+        const timeDiff = timeSlots.indexOf(endTime) - timeSlots.indexOf(startTime);
+        const isLongBooking = timeDiff >= 4;
+
+        calendar.addEvent({
+          title: `${booking.department} (${booking.startTime}-${booking.endTime})`,
+          start: booking.date,
+          allDay: true,
+          classNames: ['bg-booked', isLongBooking ? 'long-booking' : '']
+        });
+      });
+
+      const bookedDates = [...new Set(bookings.map(b => b.date))];
+      console.log('Booked dates:', bookedDates);
+      const todayStr = new Date().toISOString().split('T')[0];
+      const days = document.querySelectorAll('.fc-daygrid-day');
+      days.forEach(day => {
+        const date = day.getAttribute('data-date');
+        const dayFrame = day.querySelector('.fc-daygrid-day-frame');
+        day.setAttribute('tabindex', '0');
+        day.setAttribute('aria-label', `日期 ${date}${bookedDates.includes(date) ? '，有預約' : '，可預約'}`);
+
+        if (date === todayStr) {
+          day.classList.add('today');
+        } else {
+          day.classList.remove('today');
+        }
+
+        if (bookedDates.includes(date)) {
+          day.classList.add('bg-booked');
+          day.classList.remove('available');
+          const dayBookings = bookings.filter(b => b.date === date);
+          dayBookings.sort((a, b) => {
+            const aSum = toMinutes(a.startTime) + toMinutes(a.endTime);
+            const bSum = toMinutes(b.startTime) + toMinutes(b.endTime);
+            return aSum - bSum;
+          });
+          if (dayFrame) {
+            dayFrame.setAttribute('data-bs-toggle', 'tooltip');
+            dayFrame.setAttribute('data-bs-placement', 'top');
+            dayFrame.setAttribute('title', dayBookings
+              .map(b => `${b.department} ${b.startTime}-${b.endTime}: ${b.reason}`)
+              .join('\n'));
+          }
+        } else {
+          day.classList.remove('bg-booked');
+          day.classList.add('available');
+          if (dayFrame) {
+            dayFrame.style.backgroundColor = '';
+            dayFrame.removeAttribute('data-bs-toggle');
+            dayFrame.removeAttribute('data-bs-placement');
+            dayFrame.removeAttribute('title');
+          }
+        }
+      });
+
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+      console.log('Calendar updated, booked dates rendered:', bookedDates);
+    }
+
+    // === 模組：初始化與事件綁定 ===
+    function setupCalendarObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            initCalendar();
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(calendarContainer);
+    }
+
+    loginForm.addEventListener('submit', handleLogin);
+    logoutBtn.addEventListener('click', handleLogout);
+    bookingForm.addEventListener('submit', handleBookingSubmit);
+    cancelForm.addEventListener('submit', handleCancelSubmit);
+    document.getElementById('refresh-calendar').addEventListener('click', () => {
+      console.log('Refresh calendar clicked');
+      cachedBookings = null;
+      cacheTimestamp = null;
+      updateCalendarColors();
+    });
+    dateInput.addEventListener('change', () => {
+      // 可在此處添加動態時間選項過濾（留待高優先級優化）
+    });
+  </script>
+</body>
+</html>
