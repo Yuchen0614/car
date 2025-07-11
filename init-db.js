@@ -1,11 +1,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: 'booking_db_vkkx_user',
-  host: 'dpg-d1odj9ffte5s73b6kt1g-a.<region>.onrender.com', // 替換 <region>
-  database: 'booking_db_vkkx',
-  password: 'mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04',
-  port: 5432,
+  connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a.oregon-postgres.render.com/booking_db_vkkx',
 });
 
 async function init() {
