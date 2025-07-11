@@ -2,6 +2,9 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a.oregon-postgres.render.com/booking_db_vkkx',
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 async function init() {
