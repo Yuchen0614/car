@@ -8,12 +8,12 @@ const app = express();
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
 console.log('PORT:', process.env.PORT);
 
-// 使用連線字串中的 sslmode，同時提供備用 SSL 配置
+// 配置連線池
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false // 允許自簽憑證
-  }
+  connectionString: process.env.DATABASE_URL, // 依賴 sslmode=require
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000
 });
 
 // 測試連線並創建表格
@@ -36,6 +36,7 @@ const pool = new Pool({
     client.release();
   } catch (err) {
     console.error('Table creation error:', err.stack);
+    process.exit(1);
   }
 })();
 
@@ -49,11 +50,14 @@ app.get('/', (req, res) => {
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings');
-    console.log('Fetched bookings:', result.rows);
+    console.log('Fetched bookings count:', result.rowCount, 'rows:', result.rows);
+    if (result.rowCount === 0) {
+      console.log('No bookings found in database');
+    }
     res.json(result.rows);
   } catch (err) {
     console.error('Fetch error:', err.stack);
-    res.status(500).json({ error: '無法載取預約' });
+    res.status(500).json({ error: '無法載取預約', details: err.message });
   }
 });
 
@@ -72,6 +76,21 @@ app.post('/api/bookings', async (req, res) => {
   } catch (err) {
     console.error('Insert error:', err.stack);
     res.status(500).json({ error: '儲存失敗' + (err.code === '22P02' ? '（可能時間格式錯誤）' : '') });
+  }
+});
+
+app.delete('/api/bookings/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parseInt(id)]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: '預約不存在' });
+    }
+    console.log('Booking deleted, ID:', id, 'row:', result.rows[0]);
+    res.json({ message: '預約已取消', deleted: result.rows[0] });
+  } catch (err) {
+    console.error('Delete error:', err.stack);
+    res.status(500).json({ error: '取消失敗', details: err.message });
   }
 });
 
