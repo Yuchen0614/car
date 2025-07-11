@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
+// 資料庫連線配置
 const pool = new Pool({
   connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a.oregon-postgres.render.com/booking_db_vkkx',
   ssl: {
@@ -10,9 +11,31 @@ const pool = new Pool({
   }
 });
 
+// 自動創建資料表（應用啟動時執行）
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bookings (
+        id SERIAL PRIMARY KEY,
+        department VARCHAR(100),
+        name VARCHAR(100),
+        date DATE,
+        startTime TIME,
+        endTime TIME,
+        reason TEXT
+      )
+    `);
+    console.log('Database table "bookings" created or already exists');
+  } catch (err) {
+    console.error('Error creating database table:', err);
+  }
+})();
+
+// 中間件
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 根路徑
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
     if (err) {
@@ -22,6 +45,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// 取得所有預約
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings');
@@ -32,6 +56,7 @@ app.get('/api/bookings', async (req, res) => {
   }
 });
 
+// 新增預約
 app.post('/api/bookings', async (req, res) => {
   const { department, name, date, startTime, endTime, reason } = req.body;
   if (!department || !name || !date || !startTime || !endTime || !reason) {
@@ -50,20 +75,7 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-app.delete('/api/bookings/:id', async (req, res) => {
-  const id = req.params.id;
-  try {
-    const result = await pool.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: '找不到該預約' });
-    }
-    res.json({ message: '預約已刪除' });
-  } catch (err) {
-    console.error('Error deleting booking:', err);
-    res.status(500).json({ error: '無法刪除預約' });
-  }
-});
-
+// 啟動伺服器
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
