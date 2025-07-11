@@ -1,13 +1,14 @@
-require('dotenv').config(); // 載入 .env 檔案中的環境變數
+require('dotenv').config();
 const { Pool } = require('pg');
 const express = require('express');
 const path = require('path');
 const app = express();
 
-// 記錄環境變數以調試
+// 調試：顯示環境變數
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
 console.log('PORT:', process.env.PORT);
 
+// 使用連線字串中的 sslmode，同時提供備用 SSL 配置
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -15,6 +16,7 @@ const pool = new Pool({
   }
 });
 
+// 測試連線並創建表格
 (async () => {
   try {
     const client = await pool.connect();
