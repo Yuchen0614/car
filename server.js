@@ -6,13 +6,13 @@ const app = express();
 const pool = new Pool({
   connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a/booking_db_vkkx?sslmode=require',
   ssl: {
-    rejectUnauthorized: false // 明確禁用嚴格驗證
+    rejectUnauthorized: false // 明確允許自簽證書
   }
 });
 
 (async () => {
   try {
-    await pool.query(`
+    const res = await pool.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
         department VARCHAR(100),
@@ -23,7 +23,7 @@ const pool = new Pool({
         reason TEXT
       )
     `);
-    console.log('Table "bookings" created or exists');
+    console.log('Table "bookings" created or exists:', res.rowCount);
   } catch (err) {
     console.error('Table creation error:', err.stack);
   }
@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings');
+    console.log('Fetched bookings:', result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error('Fetch error:', err.stack);
