@@ -11,7 +11,7 @@ const pool = new Pool({
   }
 });
 
-// 自動創建資料表（應用啟動時執行）
+// 自動創建資料表
 (async () => {
   try {
     await pool.query(`
@@ -31,7 +31,6 @@ const pool = new Pool({
   }
 })();
 
-// 中間件
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -45,16 +44,17 @@ app.get('/', (req, res) => {
   });
 });
 
-// 取得所有預約（格式化日期和時間）
+// 取得所有預約
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings');
     const bookings = result.rows.map(row => ({
       ...row,
-      date: row.date.toISOString().split('T')[0], // 轉為 YYYY-MM-DD
-      startTime: row.startTime.toTimeString().split(' ')[0], // 轉為 HH:MM:SS
+      date: row.date.toISOString().split('T')[0],
+      startTime: row.startTime.toTimeString().split(' ')[0],
       endTime: row.endTime.toTimeString().split(' ')[0]
     }));
+    console.log('Fetched bookings:', bookings); // 調試日誌
     res.json(bookings);
   } catch (err) {
     console.error('Error fetching bookings:', err);
@@ -74,6 +74,7 @@ app.post('/api/bookings', async (req, res) => {
       'INSERT INTO bookings (department, name, date, startTime, endTime, reason) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [department, name, date, startTime, endTime, reason]
     );
+    console.log('Added booking:', result.rows[0]); // 調試日誌
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Error adding booking:', err);
