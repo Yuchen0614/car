@@ -804,11 +804,6 @@
     const bookingsModal = new bootstrap.Modal(document.getElementById('bookingsModal'));
     const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
 
-    let mockBookings = [
-      { id: '1', department: '管理部', name: '0000', date: '2025-05-08', startTime: '11:00', endTime: '15:00', reason: '會議' },
-      { id: '2', department: '管理部', name: '0000', date: '2025-05-08', startTime: '09:00', endTime: '10:00', reason: '拜訪客戶' }
-    ];
-
     const timeSlots = [
       '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
       '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
@@ -870,30 +865,17 @@
       try {
         const response = await fetch('/api/bookings');
         if (!response.ok) {
-          console.warn(`無法載入預約資料，狀態碼：${response.status}`);
-          cachedBookings = mockBookings;
-          cacheTimestamp = now;
-          console.log('Falling back to mockBookings:', mockBookings);
-          return mockBookings;
+          throw new Error(`無法載入預約資料，狀態碼：${response.status}`);
         }
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.warn('伺服器返回的不是 JSON 格式');
-          cachedBookings = mockBookings;
-          cacheTimestamp = now;
-          console.log('Falling back to mockBookings:', mockBookings);
-          return mockBookings;
-        }
-        cachedBookings = await response.json();
+        const bookings = await response.json();
+        cachedBookings = bookings;
         cacheTimestamp = now;
-        console.log('Fetched bookings from server:', cachedBookings);
-        return cachedBookings;
+        console.log('Fetched bookings from server:', bookings);
+        return bookings;
       } catch (error) {
         console.error('Error fetching bookings from server:', error);
-        cachedBookings = mockBookings;
-        cacheTimestamp = now;
-        console.log('Falling back to mockBookings:', mockBookings);
-        return mockBookings;
+        alert('載入預約失敗，請檢查網路或重新整理：' + error.message);
+        return [];
       }
     }
 
@@ -947,7 +929,6 @@
       }
 
       const booking = {
-        id: Date.now().toString(),
         department: document.getElementById('department').value,
         name: document.getElementById('name').value,
         date: selectedDate,
@@ -963,34 +944,13 @@
           body: JSON.stringify(booking)
         });
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || '提交預約失敗');
-          } else {
-            console.warn('伺服器返回的不是 JSON 格式，模擬提交');
-            mockBookings.push(booking);
-            cachedBookings = [...mockBookings];
-            cacheTimestamp = Date.now();
-            console.log('After booking submit, mockBookings:', mockBookings);
-            console.log('After booking submit, cachedBookings:', cachedBookings);
-            alert('預約提交成功（模擬）');
-            bookingForm.reset();
-            const calendarEl = document.getElementById('calendar');
-            const calendar = calendarEl._calendar;
-            if (calendar) {
-              calendar.getEvents().forEach(event => event.remove());
-              calendar.render();
-            }
-            await updateCalendarColors();
-            return;
-          }
+          const errorData = await response.json();
+          throw new Error(errorData.error || '提交預約失敗');
         }
-        mockBookings.push(booking);
-        cachedBookings = [...mockBookings];
+        const newBooking = await response.json();
+        cachedBookings = cachedBookings ? [...cachedBookings, newBooking] : [newBooking];
         cacheTimestamp = Date.now();
-        console.log('After booking submit, mockBookings:', mockBookings);
-        console.log('After booking submit, cachedBookings:', cachedBookings);
+        console.log('Booking submitted successfully:', newBooking);
         alert('預約提交成功');
         bookingForm.reset();
         const calendarEl = document.getElementById('calendar');
@@ -1016,18 +976,6 @@
         return;
       }
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('錯誤：未找到身份驗證令牌，請重新登錄');
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        bookingContainer.style.display = 'none';
-        calendarContainer.style.display = 'none';
-        loginContainer.style.display = 'block';
-        loginContainer.classList.add('fade-in');
-        return;
-      }
-
       try {
         const response = await fetch(`/api/bookings/${bookingId}`, {
           method: 'DELETE',
@@ -1035,39 +983,12 @@
           body: JSON.stringify({ password })
         });
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || '取消預約失敗');
-          } else {
-            console.warn('伺服器返回的不是 JSON 格式，模擬取消');
-            mockBookings = mockBookings.filter(b => b.id !== bookingId);
-            cachedBookings = [...mockBookings];
-            cacheTimestamp = Date.now();
-            console.log('After cancel, mockBookings:', mockBookings);
-            console.log('After cancel, cachedBookings:', cachedBookings);
-            alert('預約已成功取消（模擬）');
-            cancelModal.hide();
-            document.getElementById('cancel-password').value = '';
-            const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
-            const bookings = await fetchBookings();
-            const filteredBookings = bookings.filter(b => b.date === selectedDate);
-            renderBookingsList(filteredBookings, selectedDate);
-            const calendarEl = document.getElementById('calendar');
-            const calendar = calendarEl._calendar;
-            if (calendar) {
-              calendar.getEvents().forEach(event => event.remove());
-              calendar.render();
-            }
-            await updateCalendarColors();
-            return;
-          }
+          const errorData = await response.json();
+          throw new Error(errorData.error || '取消預約失敗');
         }
-        mockBookings = mockBookings.filter(b => b.id !== bookingId);
-        cachedBookings = [...mockBookings];
+        cachedBookings = cachedBookings.filter(b => b.id !== bookingId);
         cacheTimestamp = Date.now();
-        console.log('After cancel, mockBookings:', mockBookings);
-        console.log('After cancel, cachedBookings:', cachedBookings);
+        console.log('Booking canceled successfully, updated cachedBookings:', cachedBookings);
         alert('預約已成功取消');
         cancelModal.hide();
         document.getElementById('cancel-password').value = '';
@@ -1352,11 +1273,17 @@
     logoutBtn.addEventListener('click', handleLogout);
     bookingForm.addEventListener('submit', handleBookingSubmit);
     cancelForm.addEventListener('submit', handleCancelSubmit);
-    document.getElementById('refresh-calendar').addEventListener('click', () => {
+    document.getElementById('refresh-calendar').addEventListener('click', async () => {
       console.log('Refresh calendar clicked');
       cachedBookings = null;
       cacheTimestamp = null;
-      updateCalendarColors();
+      const calendarEl = document.getElementById('calendar');
+      const calendar = calendarEl._calendar;
+      if (calendar) {
+        calendar.getEvents().forEach(event => event.remove());
+        calendar.render();
+      }
+      await updateCalendarColors();
     });
     dateInput.addEventListener('change', () => {
       // 可在此處添加動態時間選項過濾（留待高優先級優化）
