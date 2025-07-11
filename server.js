@@ -3,19 +3,14 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// 資料庫配置 (使用環境變數或硬編碼，推薦後續使用環境變數)
+// 使用 External Database URL
 const pool = new Pool({
-  user: 'booking_db_vkkx_user',
-  host: 'dpg-d1odj9ffte5s73b6kt1g-a.<region>.onrender.com', // 替換 <region> (例如 us-east)
-  database: 'booking_db_vkkx',
-  password: 'mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04',
-  port: 5432,
+  connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a.oregon-postgres.render.com/booking_db_vkkx',
 });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 根路徑
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
     if (err) {
@@ -25,7 +20,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// 取得所有預約
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings');
@@ -36,7 +30,6 @@ app.get('/api/bookings', async (req, res) => {
   }
 });
 
-// 新增預約
 app.post('/api/bookings', async (req, res) => {
   const { department, name, date, startTime, endTime, reason } = req.body;
   if (!department || !name || !date || !startTime || !endTime || !reason) {
@@ -55,7 +48,6 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-// 刪除預約
 app.delete('/api/bookings/:id', async (req, res) => {
   const id = req.params.id;
   try {
@@ -70,7 +62,7 @@ app.delete('/api/bookings/:id', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT; // 使用 Render 提供的端口
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
