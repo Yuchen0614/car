@@ -804,11 +804,6 @@
     const bookingsModal = new bootstrap.Modal(document.getElementById('bookingsModal'));
     const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
 
-    let mockBookings = [
-      { id: '1', department: '管理部', name: '0000', date: '2025-05-08', startTime: '11:00', endTime: '15:00', reason: '會議' },
-      { id: '2', department: '管理部', name: '0000', date: '2025-05-08', startTime: '09:00', endTime: '10:00', reason: '拜訪客戶' }
-    ];
-
     const timeSlots = [
       '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
       '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
@@ -827,7 +822,23 @@
     const today = new Date().toISOString().split('T')[0];
     dateInput.setAttribute('min', today);
 
-    // === 模組：認証相關 (auth.js) ===
+    // 將時間轉為分鐘數
+    const toMinutes = (time) => {
+      if (!time) return 0;
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    // 檢查時間衝突
+    const isConflict = (newStart, newEnd, existingStart, existingEnd) => {
+      const newStartMin = toMinutes(newStart);
+      const newEndMin = toMinutes(newEnd);
+      const existingStartMin = toMinutes(existingStart);
+      const existingEndMin = toMinutes(existingEnd);
+      return !(newEndMin <= existingStartMin || newStartMin >= existingEndMin);
+    };
+
+    // 登入處理
     function handleLogin(e) {
       e.preventDefault();
       const username = document.getElementById('username').value;
@@ -848,6 +859,7 @@
       }
     }
 
+    // 登出處理
     function handleLogout() {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
@@ -859,7 +871,7 @@
       loginContainer.classList.add('fade-in');
     }
 
-    // === 模組：預約相關 (booking.js) ===
+    // 獲取預約資料
     async function fetchBookings() {
       const now = Date.now();
       if (cachedBookings && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
@@ -870,46 +882,21 @@
       try {
         const response = await fetch('/api/bookings');
         if (!response.ok) {
-          console.warn(`無法載入預約資料，狀態碼：${response.status}`);
-          cachedBookings = mockBookings;
-          cacheTimestamp = now;
-          console.log('Falling back to mockBookings:', mockBookings);
-          return mockBookings;
+          throw new Error(`HTTP 錯誤，狀態碼：${response.status}`);
         }
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.warn('伺服器返回的不是 JSON 格式');
-          cachedBookings = mockBookings;
-          cacheTimestamp = now;
-          console.log('Falling back to mockBookings:', mockBookings);
-          return mockBookings;
-        }
-        cachedBookings = await response.json();
+        const data = await response.json();
+        cachedBookings = data;
         cacheTimestamp = now;
         console.log('Fetched bookings from server:', cachedBookings);
-        return cachedBookings;
+        return data;
       } catch (error) {
-        console.error('Error fetching bookings from server:', error);
-        cachedBookings = mockBookings;
-        cacheTimestamp = now;
-        console.log('Falling back to mockBookings:', mockBookings);
-        return mockBookings;
+        console.error('Error fetching bookings:', error);
+        alert('無法載入預約資料：' + error.message);
+        return [];
       }
     }
 
-    const toMinutes = (time) => {
-      const [hours, minutes] = time.split(':').map(Number);
-      return hours * 60 + minutes;
-    };
-
-    const isConflict = (newStart, newEnd, existingStart, existingEnd) => {
-      const newStartMin = toMinutes(newStart);
-      const newEndMin = toMinutes(newEnd);
-      const existingStartMin = toMinutes(existingStart);
-      const existingEndMin = toMinutes(existingEnd);
-      return !(newEndMin <= existingStartMin || newStartMin >= existingEndMin);
-    };
-
+    // 提交預約
     async function handleBookingSubmit(e) {
       e.preventDefault();
       const startTime = startTimeSelect.value;
@@ -931,11 +918,11 @@
       }
 
       const bookings = await fetchBookings();
-      const filteredBookings = bookings.filter(b => b.date === selectedDate);
+      const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
 
       let hasConflict = false;
       for (const booking of filteredBookings) {
-        if (isConflict(startTime, endTime, booking.startTime, booking.endTime)) {
+        if (isConflict(startTime, endTime, booking.starttime.slice(0, 5), booking.endtime.slice(0, 5))) {
           hasConflict = true;
           break;
         }
@@ -947,12 +934,11 @@
       }
 
       const booking = {
-        id: Date.now().toString(),
         department: document.getElementById('department').value,
         name: document.getElementById('name').value,
         date: selectedDate,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTime + ':00',
+        endTime: endTime + ':00',
         reason: document.getElementById('reason').value
       };
 
@@ -963,42 +949,13 @@
           body: JSON.stringify(booking)
         });
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || '提交預約失敗');
-          } else {
-            console.warn('伺服器返回的不是 JSON 格式，模擬提交');
-            mockBookings.push(booking);
-            cachedBookings = [...mockBookings];
-            cacheTimestamp = Date.now();
-            console.log('After booking submit, mockBookings:', mockBookings);
-            console.log('After booking submit, cachedBookings:', cachedBookings);
-            alert('預約提交成功（模擬）');
-            bookingForm.reset();
-            const calendarEl = document.getElementById('calendar');
-            const calendar = calendarEl._calendar;
-            if (calendar) {
-              calendar.getEvents().forEach(event => event.remove());
-              calendar.render();
-            }
-            await updateCalendarColors();
-            return;
-          }
+          const errorData = await response.json();
+          throw new Error(errorData.error || '提交預約失敗');
         }
-        mockBookings.push(booking);
-        cachedBookings = [...mockBookings];
-        cacheTimestamp = Date.now();
-        console.log('After booking submit, mockBookings:', mockBookings);
-        console.log('After booking submit, cachedBookings:', cachedBookings);
         alert('預約提交成功');
         bookingForm.reset();
-        const calendarEl = document.getElementById('calendar');
-        const calendar = calendarEl._calendar;
-        if (calendar) {
-          calendar.getEvents().forEach(event => event.remove());
-          calendar.render();
-        }
+        cachedBookings = null;
+        cacheTimestamp = null;
         await updateCalendarColors();
       } catch (error) {
         console.error('Error submitting booking:', error);
@@ -1006,6 +963,7 @@
       }
     }
 
+    // 取消預約
     async function handleCancelSubmit(e) {
       e.preventDefault();
       const password = document.getElementById('cancel-password').value;
@@ -1035,52 +993,18 @@
           body: JSON.stringify({ password })
         });
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || '取消預約失敗');
-          } else {
-            console.warn('伺服器返回的不是 JSON 格式，模擬取消');
-            mockBookings = mockBookings.filter(b => b.id !== bookingId);
-            cachedBookings = [...mockBookings];
-            cacheTimestamp = Date.now();
-            console.log('After cancel, mockBookings:', mockBookings);
-            console.log('After cancel, cachedBookings:', cachedBookings);
-            alert('預約已成功取消（模擬）');
-            cancelModal.hide();
-            document.getElementById('cancel-password').value = '';
-            const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
-            const bookings = await fetchBookings();
-            const filteredBookings = bookings.filter(b => b.date === selectedDate);
-            renderBookingsList(filteredBookings, selectedDate);
-            const calendarEl = document.getElementById('calendar');
-            const calendar = calendarEl._calendar;
-            if (calendar) {
-              calendar.getEvents().forEach(event => event.remove());
-              calendar.render();
-            }
-            await updateCalendarColors();
-            return;
-          }
+          const errorData = await response.json();
+          throw new Error(errorData.error || '取消預約失敗');
         }
-        mockBookings = mockBookings.filter(b => b.id !== bookingId);
-        cachedBookings = [...mockBookings];
-        cacheTimestamp = Date.now();
-        console.log('After cancel, mockBookings:', mockBookings);
-        console.log('After cancel, cachedBookings:', cachedBookings);
         alert('預約已成功取消');
         cancelModal.hide();
         document.getElementById('cancel-password').value = '';
+        cachedBookings = null;
+        cacheTimestamp = null;
         const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
         const bookings = await fetchBookings();
-        const filteredBookings = bookings.filter(b => b.date === selectedDate);
+        const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
         renderBookingsList(filteredBookings, selectedDate);
-        const calendarEl = document.getElementById('calendar');
-        const calendar = calendarEl._calendar;
-        if (calendar) {
-          calendar.getEvents().forEach(event => event.remove());
-          calendar.render();
-        }
         await updateCalendarColors();
       } catch (error) {
         console.error('Error canceling booking:', error);
@@ -1088,6 +1012,7 @@
       }
     }
 
+    // 渲染預約列表
     function renderBookingsList(bookings, date) {
       const bookingsList = document.getElementById('bookings-list');
       const noBookings = document.getElementById('no-bookings');
@@ -1105,35 +1030,33 @@
       timelineContainer.style.display = 'block';
       noBookings.style.display = 'none';
 
-      // 渲染時間軸
-      const totalHours = timeSlots.length - 1; // 08:00 to 21:00 = 13 hours
+      const totalHours = timeSlots.length - 1;
       timelineContainer.innerHTML = `
         <div class="timeline">
           <div class="timeline-ticks">
             ${timeSlots.map(slot => `<div class="timeline-tick">${slot}</div>`).join('')}
           </div>
           ${bookings.map(booking => {
-            const startIndex = timeSlots.indexOf(booking.startTime);
-            const endIndex = timeSlots.indexOf(booking.endTime);
+            const startIndex = timeSlots.indexOf(booking.starttime.slice(0, 5));
+            const endIndex = timeSlots.indexOf(booking.endtime.slice(0, 5));
             const left = (startIndex / totalHours) * 100;
             const width = ((endIndex - startIndex) / totalHours) * 100;
             return `
               <div class="timeline-bar" style="left: ${left}%; --final-width: ${width}%;" 
                    data-bs-toggle="tooltip" data-bs-placement="top"
-                   title="${booking.department} (${booking.name}) ${booking.startTime}-${booking.endTime}: ${booking.reason}">
+                   title="${booking.department} (${booking.name}) ${booking.starttime.slice(0, 5)}-${booking.endtime.slice(0, 5)}: ${booking.reason}">
                 ${booking.department}
               </div>`;
           }).join('')}
         </div>
       `;
 
-      // 初始化工具提示
       const tooltipTriggerList = timelineContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
       tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
       bookings.sort((a, b) => {
-        const aSum = toMinutes(a.startTime) + toMinutes(a.endTime);
-        const bSum = toMinutes(b.startTime) + toMinutes(b.endTime);
+        const aSum = toMinutes(a.starttime) + toMinutes(a.endtime);
+        const bSum = toMinutes(b.starttime) + toMinutes(b.endtime);
         return aSum - bSum;
       });
 
@@ -1154,7 +1077,7 @@
                 </div>
                 <div>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
-                  ${booking.startTime}-${booking.endTime}
+                  ${booking.starttime.slice(0, 5)}-${booking.endtime.slice(0, 5)}
                 </div>
                 <div>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
@@ -1177,7 +1100,7 @@
               </div>
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
-                ${booking.startTime}-${booking.endTime}
+                ${booking.starttime.slice(0, 5)}-${booking.endtime.slice(0, 5)}
               </div>
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
@@ -1189,6 +1112,7 @@
       }).join('');
     }
 
+    // 顯示取消模態框
     function showCancelModal(bookingId) {
       if (!bookingId) {
         console.error('showCancelModal 接收到無效的 bookingId:', bookingId);
@@ -1201,7 +1125,7 @@
       cancelModal.show();
     }
 
-    // === 模組：日曆相關 (calendar.js) ===
+    // 初始化日曆
     function initCalendar() {
       const calendarEl = document.getElementById('calendar');
       const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1215,7 +1139,7 @@
           document.getElementById('timeline-container').style.display = 'none';
           try {
             const bookings = await fetchBookings();
-            const filteredBookings = bookings.filter(b => b.date === selectedDate);
+            const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
             renderBookingsList(filteredBookings, selectedDate);
             document.getElementById('bookingsModalLabel').textContent = `${selectedDate} 的預約`;
             document.querySelector('.loading').style.display = 'none';
@@ -1247,6 +1171,7 @@
       });
     }
 
+    // 更新日曆顏色
     async function updateCalendarColors() {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -1272,20 +1197,26 @@
       calendar.getEvents().forEach(event => event.remove());
 
       bookings.forEach(booking => {
-        const startTime = booking.startTime;
-        const endTime = booking.endTime;
+        const startTime = booking.starttime ? booking.starttime.slice(0, 5) : '未知';
+        const endTime = booking.endtime ? booking.endtime.slice(0, 5) : '未知';
+        const date = new Date(booking.date).toISOString().split('T')[0];
         const timeDiff = timeSlots.indexOf(endTime) - timeSlots.indexOf(startTime);
         const isLongBooking = timeDiff >= 4;
 
         calendar.addEvent({
-          title: `${booking.department} (${booking.startTime}-${booking.endTime})`,
-          start: booking.date,
+          title: `${booking.department} (${startTime}-${endTime})`,
+          start: date,
           allDay: true,
-          classNames: ['bg-booked', isLongBooking ? 'long-booking' : '']
+          classNames: ['bg-booked', isLongBooking ? 'long-booking' : ''],
+          extendedProps: {
+            department: booking.department,
+            name: booking.name,
+            reason: booking.reason
+          }
         });
       });
 
-      const bookedDates = [...new Set(bookings.map(b => b.date))];
+      const bookedDates = [...new Set(bookings.map(b => new Date(b.date).toISOString().split('T')[0]))];
       console.log('Booked dates:', bookedDates);
       const todayStr = new Date().toISOString().split('T')[0];
       const days = document.querySelectorAll('.fc-daygrid-day');
@@ -1304,17 +1235,17 @@
         if (bookedDates.includes(date)) {
           day.classList.add('bg-booked');
           day.classList.remove('available');
-          const dayBookings = bookings.filter(b => b.date === date);
+          const dayBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === date);
           dayBookings.sort((a, b) => {
-            const aSum = toMinutes(a.startTime) + toMinutes(a.endTime);
-            const bSum = toMinutes(b.startTime) + toMinutes(b.endTime);
+            const aSum = toMinutes(a.starttime) + toMinutes(a.endtime);
+            const bSum = toMinutes(b.starttime) + toMinutes(b.endtime);
             return aSum - bSum;
           });
           if (dayFrame) {
             dayFrame.setAttribute('data-bs-toggle', 'tooltip');
             dayFrame.setAttribute('data-bs-placement', 'top');
             dayFrame.setAttribute('title', dayBookings
-              .map(b => `${b.department} ${b.startTime}-${b.endTime}: ${b.reason}`)
+              .map(b => `${b.department} ${b.starttime.slice(0, 5)}-${b.endtime.slice(0, 5)}: ${b.reason}`)
               .join('\n'));
           }
         } else {
@@ -1334,7 +1265,7 @@
       console.log('Calendar updated, booked dates rendered:', bookedDates);
     }
 
-    // === 模組：初始化與事件綁定 ===
+    // 初始化與事件綁定
     function setupCalendarObserver() {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -1359,7 +1290,7 @@
       updateCalendarColors();
     });
     dateInput.addEventListener('change', () => {
-      // 可在此處添加動態時間選項過濾（留待高優先級優化）
+      // 可在此處添加動態時間選項過濾（留待未來優化）
     });
   </script>
 </body>
