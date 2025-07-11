@@ -5,7 +5,9 @@ const app = express();
 
 const pool = new Pool({
   connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a/booking_db_vkkx?sslmode=require',
-  ssl: { rejectUnauthorized: false }
+  ssl: {
+    rejectUnauthorized: false // 明確禁用嚴格驗證
+  }
 });
 
 (async () => {
