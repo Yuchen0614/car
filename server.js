@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// 使用 External Database URL
 const pool = new Pool({
   connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a.oregon-postgres.render.com/booking_db_vkkx',
   ssl: {
@@ -65,7 +64,7 @@ app.delete('/api/bookings/:id', async (req, res) => {
   }
 });
 
-const port = process.env.PORT; // 使用 Render 提供的端口
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
