@@ -1,12 +1,13 @@
+require('dotenv').config();
 const { Pool } = require('pg');
 const express = require('express');
 const path = require('path');
 const app = express();
 
 const pool = new Pool({
-  connectionString: 'postgresql://booking_db_vkkx_user:mX4TZ2wO2eEtfnEQ7aOz4cY2riZKaK04@dpg-d1odj9ffte5s73b6kt1g-a/booking_db_vkkx?sslmode=require',
+  connectionString: process.env.DATABASE_URL, // 從環境變數獲取
   ssl: {
-    rejectUnauthorized: false // 明確允許自簽證書
+    rejectUnauthorized: false // 允許自簽憑證
   }
 });
 
@@ -50,7 +51,7 @@ app.get('/api/bookings', async (req, res) => {
 app.post('/api/bookings', async (req, res) => {
   const { department, name, date, startTime, endTime, reason } = req.body;
   if (!department || !name || !date || !startTime || !endTime || !reason) {
-    return res.status(400).json({ error: '所有欄位必填' });
+    return res.status(500).json({ error: '所有欄位必填' });
   }
   try {
     const result = await pool.query(
@@ -65,7 +66,7 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // 確保使用 Render 的 PORT
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
