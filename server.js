@@ -1,11 +1,15 @@
-require('dotenv').config();
+require('dotenv').config(); // 載入 .env 檔案中的環境變數
 const { Pool } = require('pg');
 const express = require('express');
 const path = require('path');
 const app = express();
 
+// 記錄環境變數以調試
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('PORT:', process.env.PORT);
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // 從環境變數獲取
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false // 允許自簽憑證
   }
@@ -13,7 +17,9 @@ const pool = new Pool({
 
 (async () => {
   try {
-    const res = await pool.query(`
+    const client = await pool.connect();
+    console.log('Database connection successful');
+    const res = await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
         department VARCHAR(100),
@@ -25,6 +31,7 @@ const pool = new Pool({
       )
     `);
     console.log('Table "bookings" created or exists:', res.rowCount);
+    client.release();
   } catch (err) {
     console.error('Table creation error:', err.stack);
   }
@@ -51,7 +58,7 @@ app.get('/api/bookings', async (req, res) => {
 app.post('/api/bookings', async (req, res) => {
   const { department, name, date, startTime, endTime, reason } = req.body;
   if (!department || !name || !date || !startTime || !endTime || !reason) {
-    return res.status(500).json({ error: '所有欄位必填' });
+    return res.status(400).json({ error: '所有欄位必填' });
   }
   try {
     const result = await pool.query(
@@ -66,7 +73,7 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000; // 確保使用 Render 的 PORT
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
