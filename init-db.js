@@ -20,7 +20,7 @@ async function init() {
         reason TEXT
       )
     `);
-    console.log('Database table created successfully');
+    console.log('Database table "bookings" created successfully');
   } catch (err) {
     console.error('Error initializing database:', err);
   } finally {
