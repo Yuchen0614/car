@@ -397,22 +397,19 @@
     .notification-message {
       display: none;
       position: fixed;
-      top: 20vh; /* 螢幕中上 */
+      top: 20vh; /* 改為螢幕中上，約 20% 高度 */
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
       max-width: 400px;
-      min-height: 60px; /* 確保垂直空間 */
-      padding: 12px; /* 均勻內邊距 */
+      padding: 15px;
       border-radius: 6px;
+      text-align: center;
+      font-size: 0.9rem;
       font-family: 'Georgia', serif;
       font-weight: 500;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       z-index: 10000;
-      display: flex; /* 使用 flex 確保內容置中 */
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
     }
 
     .success-message {
@@ -430,54 +427,18 @@
     .elegant-text {
       font-style: italic;
       letter-spacing: 0.5px;
+      text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px; /* Emoji 與文字間距 */
-      font-size: 0.9rem; /* 統一字體大小 */
-      margin: 0; /* 移除預設外邊距 */
-      width: 100%; /* 確保內容填滿容器 */
-      text-align: center;
     }
 
     .elegant-text span.emoji {
-      font-size: 0.9rem; /* 與文字大小一致 */
+      font-size: 1rem; /* 確保 emoji 與文字大小一致 */
     }
 
-    /* 自訂動畫以確保置中 */
-    @keyframes centeredFadeInDown {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -10vh); /* 從 10vh 滑入 */
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, 0); /* 最終位置 */
-      }
-    }
-
-    @keyframes centeredFadeOutUp {
-      from {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
-      to {
-        opacity: 0;
-        transform: translate(-50%, -10vh); /* 滑出到 10vh */
-      }
-    }
-
-    .notification-message.animate__fadeInDown {
-      animation-name: centeredFadeInDown;
-      animation-duration: 0.5s;
-    }
-
-    .notification-message.animate__fadeOutUp {
-      animation-name: centeredFadeOutUp;
-      animation-duration: 0.5s;
-    }
-
-    /* 其他動畫定義 */
+    /* 動畫定義 */
     @keyframes slideIn {
       from {
         transform: translateX(50px);
@@ -529,7 +490,7 @@
         width: 0;
       }
       to {
-        width: var(--final-width);
+        width: var(--final-width); /* 使用 CSS 變量來設置最終寬度 */
       }
     }
 
@@ -564,13 +525,8 @@
 
       .notification-message {
         font-size: 0.85rem;
-        padding: 10px;
+        padding: 12px;
         width: 95%;
-        min-height: 50px;
-      }
-
-      .elegant-text {
-        font-size: 0.85rem;
       }
 
       .elegant-text span.emoji {
@@ -662,12 +618,7 @@
 
       .notification-message {
         font-size: 0.8rem;
-        padding: 8px;
-        min-height: 48px;
-      }
-
-      .elegant-text {
-        font-size: 0.8rem;
+        padding: 10px;
       }
 
       .elegant-text span.emoji {
@@ -745,11 +696,6 @@
       }
 
       .notification-message {
-        font-size: 1rem;
-        min-height: 64px;
-      }
-
-      .elegant-text {
         font-size: 1rem;
       }
 
@@ -978,7 +924,7 @@
       messageElement.innerHTML = `<span class="emoji">${emoji}</span> ${message}`;
       notification.appendChild(messageElement);
       notification.className = `notification-message animate__animated animate__faster ${isSuccess ? 'success-message' : 'error-message'}`;
-      notification.style.display = 'flex'; // 使用 flex 顯示
+      notification.style.display = 'block';
       notification.classList.add('animate__fadeInDown');
       setTimeout(() => {
         notification.classList.remove('animate__fadeInDown');
