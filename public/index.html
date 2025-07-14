@@ -492,6 +492,8 @@
       display: none;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      gap: 10px;
       z-index: 20000;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -505,18 +507,30 @@
     .progress-container {
       width: 80%;
       max-width: 600px;
-      background: #e5e7eb;
-      border-radius: 4px;
-      height: 8px;
+      background: linear-gradient(90deg, #e5e7eb, #f3f4f6);
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      height: 12px;
       overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .progress-bar {
       width: 0;
       height: 100%;
-      background: #3b82f6;
-      border-radius: 4px;
-      animation: progress 0.5s linear forwards;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+      animation: progress 0.8s ease-in-out forwards;
+    }
+
+    .progress-percentage {
+      font-family: 'Georgia', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: #3b82f6;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      animation: updatePercentage 0.8s ease-in-out forwards;
     }
 
     @keyframes progress {
@@ -526,6 +540,22 @@
       100% {
         width: 100%;
       }
+    }
+
+    @keyframes updatePercentage {
+      0% {
+        content: '0%';
+      }
+      10% { content: '10%'; }
+      20% { content: '20%'; }
+      30% { content: '30%'; }
+      40% { content: '40%'; }
+      50% { content: '50%'; }
+      60% { content: '60%'; }
+      70% { content: '70%'; }
+      80% { content: '80%'; }
+      90% { content: '90%'; }
+      100% { content: '100%'; }
     }
 
     /* 其他動畫定義 */
@@ -692,7 +722,11 @@
 
       .progress-container {
         width: 85%;
-        height: 7px;
+        height: 10px;
+      }
+
+      .progress-percentage {
+        font-size: 16px;
       }
     }
 
@@ -783,7 +817,11 @@
 
       .progress-container {
         width: 90%;
-        height: 6px;
+        height: 8px;
+      }
+
+      .progress-percentage {
+        font-size: 14px;
       }
     }
 
@@ -827,7 +865,11 @@
 
       .progress-container {
         width: 70%;
-        height: 10px;
+        height: 14px;
+      }
+
+      .progress-percentage {
+        font-size: 20px;
       }
     }
   </style>
@@ -835,6 +877,7 @@
 <body>
   <!-- 載入動畫容器 -->
   <div id="loading-overlay">
+    <div class="progress-percentage">0%</div>
     <div class="progress-container">
       <div class="progress-bar"></div>
     </div>
@@ -997,6 +1040,7 @@
     const bookingContainer = document.getElementById('booking-container');
     const calendarContainer = document.getElementById('calendar-container');
     const loadingOverlay = document.getElementById('loading-overlay');
+    const progressPercentage = document.querySelector('.progress-percentage');
     const loginForm = document.getElementById('login-form');
     const bookingForm = document.getElementById('booking-form');
     const cancelForm = document.getElementById('cancel-form');
@@ -1070,6 +1114,18 @@
     // 顯示載入動畫
     function showLoadingOverlay() {
       loadingOverlay.classList.add('show');
+      // 初始化百分比文字
+      progressPercentage.textContent = '0%';
+      // 使用 setTimeout 模擬百分比動畫（與 CSS 動畫同步）
+      let percentage = 0;
+      const interval = setInterval(() => {
+        percentage += 10;
+        if (percentage <= 100) {
+          progressPercentage.textContent = `${percentage}%`;
+        } else {
+          clearInterval(interval);
+        }
+      }, 80); // 每 0.08秒更新一次，總計 0.8秒
     }
 
     // 隱藏載入動畫
@@ -1099,11 +1155,11 @@
         bookingContainer.classList.add('fade-in');
         calendarContainer.classList.add('fade-in');
 
-        // 等待 fade-in 和進度條動畫完成（0.5秒）後隱藏載入動畫
+        // 等待 fade-in 和進度條動畫完成（0.8秒）後隱藏載入動畫
         setTimeout(() => {
           setupCalendarObserver();
           hideLoadingOverlay();
-        }, 500);
+        }, 800);
       } else {
         showNotification('❗ 用戶名或密碼錯誤', false);
       }
@@ -1594,7 +1650,7 @@
         setTimeout(() => {
           setupCalendarObserver();
           hideLoadingOverlay();
-        }, 500);
+        }, 800);
       }
       initEventListeners();
     }
