@@ -473,7 +473,7 @@
       }
     }
 
-    .notification-message.show.animate__fadeInDown {
+    .notification-message.show.animate__animated {
       animation: centeredFadeInDown 0.5s ease forwards;
     }
 
@@ -481,7 +481,7 @@
       animation: centeredFadeOutUp 0.5s ease forwards;
     }
 
-    /* 載入動畫樣式 */
+    /* 進度條樣式 */
     #loading-overlay {
       position: fixed;
       top: 0;
@@ -502,24 +502,29 @@
       opacity: 1;
     }
 
-    .spinner {
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
+    .progress-container {
+      width: 80%;
+      max-width: 600px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
     }
 
-    .spinner svg {
-      width: 100%;
+    .progress-bar {
+      width: 0;
       height: 100%;
-      fill: #3b82f6;
+      background: #3b82f6;
+      border-radius: 4px;
+      animation: progress 0.5s linear forwards;
     }
 
-    @keyframes spin {
+    @keyframes progress {
       0% {
-        transform: rotate(0deg);
+        width: 0;
       }
       100% {
-        transform: rotate(360deg);
+        width: 100%;
       }
     }
 
@@ -685,9 +690,9 @@
         font-size: 0.65rem;
       }
 
-      .spinner {
-        width: 40px;
-        height: 40px;
+      .progress-container {
+        width: 85%;
+        height: 7px;
       }
     }
 
@@ -776,9 +781,9 @@
         font-size: 0.6rem;
       }
 
-      .spinner {
-        width: 35px;
-        height: 35px;
+      .progress-container {
+        width: 90%;
+        height: 6px;
       }
     }
 
@@ -820,9 +825,9 @@
         font-size: 0.75rem;
       }
 
-      .spinner {
-        width: 60px;
-        height: 60px;
+      .progress-container {
+        width: 70%;
+        height: 10px;
       }
     }
   </style>
@@ -830,10 +835,8 @@
 <body>
   <!-- 載入動畫容器 -->
   <div id="loading-overlay">
-    <div class="spinner">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 2a10 10 0 0 1 10 10 1 1 0 0 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2z"/>
-      </svg>
+    <div class="progress-container">
+      <div class="progress-bar"></div>
     </div>
   </div>
 
@@ -1096,7 +1099,7 @@
         bookingContainer.classList.add('fade-in');
         calendarContainer.classList.add('fade-in');
 
-        // 等待 fade-in 動畫完成（0.5秒）後隱藏載入動畫
+        // 等待 fade-in 和進度條動畫完成（0.5秒）後隱藏載入動畫
         setTimeout(() => {
           setupCalendarObserver();
           hideLoadingOverlay();
