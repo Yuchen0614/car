@@ -427,6 +427,15 @@
     .elegant-text {
       font-style: italic;
       letter-spacing: 0.5px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px; /* Emoji 與文字間距 */
+    }
+
+    .elegant-text span.emoji {
+      font-size: 1rem; /* 確保 emoji 與文字大小一致 */
     }
 
     /* 動畫定義 */
@@ -520,6 +529,10 @@
         width: 95%;
       }
 
+      .elegant-text span.emoji {
+        font-size: 0.85rem;
+      }
+
       #calendar {
         font-size: 0.8rem;
       }
@@ -608,6 +621,10 @@
         padding: 10px;
       }
 
+      .elegant-text span.emoji {
+        font-size: 0.8rem;
+      }
+
       #calendar {
         font-size: 0.7rem;
       }
@@ -679,6 +696,10 @@
       }
 
       .notification-message {
+        font-size: 1rem;
+      }
+
+      .elegant-text span.emoji {
         font-size: 1rem;
       }
 
@@ -899,7 +920,8 @@
       notification.textContent = '';
       const messageElement = document.createElement('p');
       messageElement.className = 'elegant-text';
-      messageElement.textContent = message;
+      const emoji = isSuccess ? '✅' : '❗';
+      messageElement.innerHTML = `<span class="emoji">${emoji}</span> ${message}`;
       notification.appendChild(messageElement);
       notification.className = `notification-message animate__animated animate__faster ${isSuccess ? 'success-message' : 'error-message'}`;
       notification.style.display = 'block';
@@ -931,7 +953,7 @@
         calendarContainer.classList.add('fade-in');
         setupCalendarObserver();
       } else {
-        showNotification('用戶名或密碼錯誤', false);
+        showNotification('❗ 用戶名或密碼錯誤', false);
       }
     }
 
@@ -967,7 +989,7 @@
         return data;
       } catch (error) {
         console.error('Error fetching bookings:', error);
-        showNotification('無法載入預約資料：' + error.message, false);
+        showNotification(`❗ 無法載入預約資料：${error.message}`, false);
         return [];
       }
     }
@@ -984,12 +1006,12 @@
       const bookingDate = new Date(selectedDate);
 
       if (bookingDate < todayDate) {
-        showNotification('無法預約過去的日期，請選擇未來的日期', false);
+        showNotification('❗ 無法預約過去的日期，請選擇未來的日期', false);
         return;
       }
 
       if (!startTime || !endTime || startTime >= endTime) {
-        showNotification('請選擇有效的時間區段（結束時間必須晚於開始時間）', false);
+        showNotification('❗ 請選擇有效的時間區段（結束時間必須晚於開始時間）', false);
         return;
       }
 
@@ -1005,7 +1027,7 @@
       }
 
       if (hasConflict) {
-        showNotification('所選時間區段與現有預約衝突，請選擇其他時間', false);
+        showNotification('❗ 所選時間區段與現有預約衝突，請選擇其他時間', false);
         return;
       }
 
@@ -1028,14 +1050,14 @@
           const errorData = await response.json();
           throw new Error(errorData.error || '提交預約失敗');
         }
-        showNotification('預約提交成功', true);
+        showNotification('✅ 預約提交成功', true);
         bookingForm.reset();
         cachedBookings = null;
         cacheTimestamp = null;
         await updateCalendarColors();
       } catch (error) {
         console.error('Error submitting booking:', error);
-        showNotification('提交預約失敗：' + error.message, false);
+        showNotification(`❗ 提交預約失敗：${error.message}`, false);
       }
     }
 
@@ -1055,14 +1077,14 @@
 
       if (!bookingId) {
         cancelModal.hide();
-        showNotification('錯誤：無效的預約ID', false);
+        showNotification('❗ 錯誤：無效的預約ID', false);
         return;
       }
 
       const token = localStorage.getItem('token');
       if (!token) {
         cancelModal.hide();
-        showNotification('錯誤：未找到身份驗證令牌，請重新登錄', false);
+        showNotification('❗ 錯誤：未找到身份驗證令牌，請重新登錄', false);
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         bookingContainer.style.display = 'none';
@@ -1083,7 +1105,7 @@
           const errorData = await response.json();
           throw new Error(errorData.error || '取消預約失敗');
         }
-        showNotification('預約已成功取消！', true);
+        showNotification('✅ 預約已成功取消！', true);
         cachedBookings = null;
         cacheTimestamp = null;
         const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
@@ -1091,7 +1113,7 @@
       } catch (error) {
         console.error('Error canceling booking:', error);
         cancelModal.hide();
-        showNotification('取消預約失敗：' + error.message, false);
+        showNotification(`❗ 取消預約失敗：${error.message}`, false);
       }
       document.getElementById('cancel-password').value = '';
     }
@@ -1200,7 +1222,7 @@
     function showCancelModal(bookingId) {
       if (!bookingId) {
         console.error('showCancelModal 接收到無效的 bookingId:', bookingId);
-        showNotification('錯誤：無法顯示取消視窗，預約ID無效', false);
+        showNotification('❗ 錯誤：無法顯示取消視窗，預約ID無效', false);
         return;
       }
       const cancelBookingIdInput = document.getElementById('cancel-booking-id');
@@ -1259,7 +1281,7 @@
     async function updateCalendarColors() {
       const token = localStorage.getItem('token');
       if (!token) {
-        showNotification('錯誤：未找到身份驗證令牌，請重新登錄', false);
+        showNotification('❗ 錯誤：未找到身份驗證令牌，請重新登錄', false);
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         bookingContainer.style.display = 'none';
