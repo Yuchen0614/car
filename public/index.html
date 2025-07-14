@@ -225,10 +225,6 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
     }
 
-    .fc-button:active {
-      animation: pulse 0.3s ease !important;
-    }
-
     .fc-toolbar-title {
       font-size: 1rem !important;
       color: #1f2937;
@@ -273,7 +269,7 @@
       transition: background 0.2s ease;
       gap: 0.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      animation: slideInRight 0.5s ease forwards;
+      animation: slideIn 0.5s ease forwards;
     }
 
     .booking-card:hover {
@@ -310,15 +306,11 @@
       flex-shrink: 0;
     }
 
-    .cancel-btn:active {
-      animation: pulse 0.3s ease;
-    }
-
     .modal-content {
       border-radius: 12px;
       border: none;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      animation: slideInDown 0.3s ease;
+      animation: modalSlideIn 0.3s ease;
     }
 
     .modal-header {
@@ -353,7 +345,6 @@
       border-radius: 8px;
       position: relative;
       height: 80px;
-      animation: slideInRight 0.5s ease forwards;
     }
 
     .timeline {
@@ -416,7 +407,6 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       margin-top: 15px;
       border-left: 4px solid #D4A373; /* 金色邊框 */
-      --animate-duration: 0.5s; /* 加快動畫速度 */
     }
 
     .elegant-text {
@@ -478,16 +468,6 @@
       to {
         width: var(--final-width); /* 使用 CSS 變量來設置最終寬度 */
       }
-    }
-
-    /* 按鈕點擊動畫 */
-    .btn-primary:active, .btn-secondary:active, .btn-danger:active {
-      animation: pulse 0.3s ease;
-    }
-
-    /* 動畫速度控制 */
-    .animate__animated {
-      --animate-duration: 0.5s;
     }
 
     @media (max-width: 768px) {
@@ -586,10 +566,6 @@
         height: 16px;
         font-size: 0.65rem;
       }
-
-      .animate__animated {
-        --animate-duration: 0.4s; /* 小螢幕動畫稍快 */
-      }
     }
 
     @media (max-width: 576px) {
@@ -666,10 +642,6 @@
       .timeline-bar {
         height: 14px;
         font-size: 0.6rem;
-      }
-
-      .animate__animated {
-        --animate-duration: 0.3s; /* 更小螢幕動畫更快 */
       }
     }
 
@@ -918,8 +890,8 @@
         loginContainer.style.display = 'none';
         bookingContainer.style.display = 'block';
         calendarContainer.style.display = 'block';
-        bookingContainer.classList.add('fade-in', 'animate__animated', 'animate__fadeIn');
-        calendarContainer.classList.add('fade-in', 'animate__animated', 'animate__fadeInUp');
+        bookingContainer.classList.add('fade-in');
+        calendarContainer.classList.add('fade-in');
         setupCalendarObserver();
       } else {
         alert('用戶名或密碼錯誤');
@@ -935,7 +907,7 @@
       bookingContainer.style.display = 'none';
       calendarContainer.style.display = 'none';
       loginContainer.style.display = 'block';
-      loginContainer.classList.add('fade-in', 'animate__animated', 'animate__fadeIn');
+      loginContainer.classList.add('fade-in');
     }
 
     // 獲取預約資料
@@ -1024,7 +996,6 @@
         cachedBookings = null;
         cacheTimestamp = null;
         await updateCalendarColors();
-        bookingContainer.classList.add('animate__animated', 'animate__fadeIn');
       } catch (error) {
         console.error('Error submitting booking:', error);
         alert('提交預約失敗：' + error.message);
@@ -1059,7 +1030,7 @@
         bookingContainer.style.display = 'none';
         calendarContainer.style.display = 'none';
         loginContainer.style.display = 'block';
-        loginContainer.classList.add('fade-in', 'animate__animated', 'animate__fadeIn');
+        loginContainer.classList.add('fade-in');
         return;
       }
 
@@ -1073,11 +1044,11 @@
           const errorData = await response.json();
           throw new Error(errorData.error || '取消預約失敗');
         }
-        // 顯示質感動畫（加快）
+        // 顯示質感動畫
         successMessage.style.display = 'block';
         successMessage.classList.remove('animate__fadeOut');
         successMessage.classList.add('animate__fadeInUp', 'animate__animated');
-        // 1.5秒後隱藏動畫並關閉模態框
+        // 3秒後隱藏動畫並關閉模態框
         setTimeout(() => {
           successMessage.classList.remove('animate__fadeInUp');
           successMessage.classList.add('animate__fadeOut');
@@ -1088,9 +1059,9 @@
             cachedBookings = null;
             cacheTimestamp = null;
             const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
-            updateAfterCancel(selectedDate);
-          }, 500); // 縮短淡出時間
-        }, 1500); // 縮短顯示時間
+            updateAfterCancel(selectedDate); // 調用輔助函數處理非同步更新
+          }, 1000);
+        }, 3000);
       } catch (error) {
         console.error('Error canceling booking:', error);
         alert('取消預約失敗：' + error.message);
@@ -1127,7 +1098,7 @@
             const left = (startIndex / totalHours) * 100;
             const width = ((endIndex - startIndex) / totalHours) * 100;
             return `
-              <div class="timeline-bar animate__animated animate__slideInRight" style="left: ${left}%; --final-width: ${width}%;" 
+              <div class="timeline-bar" style="left: ${left}%; --final-width: ${width}%;" 
                    data-bs-toggle="tooltip" data-bs-placement="top"
                    title="${booking.department} (${booking.name}) ${booking.starttime.slice(0, 5)}-${booking.endtime.slice(0, 5)}: ${booking.reason}">
                 ${booking.department}
@@ -1150,7 +1121,7 @@
         if (!bookingId) {
           console.warn('預約缺少 id 屬性:', booking);
           return `
-            <div class="booking-card animate__animated animate__slideInRight" style="animation-delay: ${index * 0.1}s;">
+            <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
               <div class="booking-info">
                 <div>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
@@ -1173,7 +1144,7 @@
             </div>`;
         }
         return `
-          <div class="booking-card animate__animated animate__slideInRight" style="animation-delay: ${index * 0.1}s;">
+          <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
             <div class="booking-info">
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
@@ -1243,7 +1214,6 @@
       });
       calendar.render();
       calendarEl._calendar = calendar;
-      calendarEl.classList.add('animate__animated', 'animate__fadeInUp');
 
       calendarEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -1267,7 +1237,7 @@
         bookingContainer.style.display = 'none';
         calendarContainer.style.display = 'none';
         loginContainer.style.display = 'block';
-        loginContainer.classList.add('fade-in', 'animate__animated', 'animate__fadeIn');
+        loginContainer.classList.add('fade-in');
         return;
       }
 
@@ -1374,10 +1344,6 @@
       cachedBookings = null;
       cacheTimestamp = null;
       updateCalendarColors();
-      document.getElementById('refresh-calendar').classList.add('animate__animated', 'animate__pulse');
-      setTimeout(() => {
-        document.getElementById('refresh-calendar').classList.remove('animate__animated', 'animate__pulse');
-      }, 300);
     });
     dateInput.addEventListener('change', () => {
       // 可在此處添加動態時間選項過濾（留待未來優化）
