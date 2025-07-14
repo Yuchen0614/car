@@ -1116,7 +1116,7 @@
           const isBooked = filteredBookings.some(booking => isConflict(slot, timeSlots[timeSlots.indexOf(slot) + 1], booking.starttime?.slice(0, 5), booking.endtime?.slice(0, 5)));
           const option = document.createElement('option');
           option.value = slot;
-          option.textContent = isBooked ? `${slot} (已預約)` : slot;
+          option.textContent = isBooked ? `${slot} ()` : slot;
           option.disabled = isBooked;
           option.setAttribute('aria-disabled', isBooked ? 'true' : 'false');
           startTimeSelect.appendChild(option);
@@ -1156,7 +1156,7 @@
         const isBooked = bookings.some(booking => isConflict(startTime, slot, booking.starttime?.slice(0, 5), booking.endtime?.slice(0, 5)));
         const option = document.createElement('option');
         option.value = slot;
-        option.textContent = isBooked ? `${slot} ("")` : slot;
+        option.textContent = isBooked ? `${slot} ()` : slot;
         option.disabled = isBooked;
         option.setAttribute('aria-disabled', isBooked ? 'true' : 'false');
         endTimeSelect.appendChild(option);
