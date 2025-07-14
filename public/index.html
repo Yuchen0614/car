@@ -481,6 +481,48 @@
       animation: centeredFadeOutUp 0.5s ease forwards;
     }
 
+    /* 載入動畫樣式 */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #loading-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner svg {
+      width: 100%;
+      height: 100%;
+      fill: #3b82f6;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     /* 其他動畫定義 */
     @keyframes slideIn {
       from {
@@ -642,6 +684,11 @@
         height: 16px;
         font-size: 0.65rem;
       }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+      }
     }
 
     @media (max-width: 576px) {
@@ -728,6 +775,11 @@
         height: 14px;
         font-size: 0.6rem;
       }
+
+      .spinner {
+        width: 35px;
+        height: 35px;
+      }
     }
 
     @media (min-width: 1200px) {
@@ -767,10 +819,24 @@
       .timeline-bar {
         font-size: 0.75rem;
       }
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- 載入動畫容器 -->
+  <div id="loading-overlay">
+    <div class="spinner">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 0 1 10 10 1 1 0 0 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2z"/>
+      </svg>
+    </div>
+  </div>
+
   <!-- 通知訊息容器 -->
   <div id="notification-message" class="notification-message animate__animated"></div>
 
@@ -927,6 +993,7 @@
     const loginContainer = document.getElementById('login-container');
     const bookingContainer = document.getElementById('booking-container');
     const calendarContainer = document.getElementById('calendar-container');
+    const loadingOverlay = document.getElementById('loading-overlay');
     const loginForm = document.getElementById('login-form');
     const bookingForm = document.getElementById('booking-form');
     const cancelForm = document.getElementById('cancel-form');
@@ -997,6 +1064,16 @@
       }, 2000); // 訊息顯示 2秒
     }
 
+    // 顯示載入動畫
+    function showLoadingOverlay() {
+      loadingOverlay.classList.add('show');
+    }
+
+    // 隱藏載入動畫
+    function hideLoadingOverlay() {
+      loadingOverlay.classList.remove('show');
+    }
+
     // 登入處理
     function handleLogin(e) {
       e.preventDefault();
@@ -1013,11 +1090,17 @@
         localStorage.setItem('token', 'mock-token');
         localStorage.setItem('username', username);
         loginContainer.style.display = 'none';
+        showLoadingOverlay(); // 顯示載入動畫
         bookingContainer.style.display = 'block';
         calendarContainer.style.display = 'block';
         bookingContainer.classList.add('fade-in');
         calendarContainer.classList.add('fade-in');
-        setupCalendarObserver();
+
+        // 等待 fade-in 動畫完成（0.5秒）後隱藏載入動畫
+        setTimeout(() => {
+          setupCalendarObserver();
+          hideLoadingOverlay();
+        }, 500);
       } else {
         showNotification('❗ 用戶名或密碼錯誤', false);
       }
@@ -1500,11 +1583,15 @@
       const token = localStorage.getItem('token');
       if (token) {
         loginContainer.style.display = 'none';
+        showLoadingOverlay(); // 顯示載入動畫
         bookingContainer.style.display = 'block';
         calendarContainer.style.display = 'block';
         bookingContainer.classList.add('fade-in');
         calendarContainer.classList.add('fade-in');
-        setupCalendarObserver();
+        setTimeout(() => {
+          setupCalendarObserver();
+          hideLoadingOverlay();
+        }, 500);
       }
       initEventListeners();
     }
