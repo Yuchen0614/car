@@ -336,7 +336,7 @@
       top: -20px;
       width: 100%;
       font-size: 0.75rem;
-      color: #6b7280;
+      color: #6-B7280;
     }
 
     .timeline-tick {
@@ -446,7 +446,7 @@
     }
 
     .notification-message.show.animate__animated {
-      animation: centeredFadeInDown 0.5s ease forwards;
+      animation: centered fadeInDown 0.5s ease forwards;
     }
 
     .notification-message.animate__fadeOutUp {
@@ -530,20 +530,26 @@
       width: 60px;
       height: 30px;
       left: -60px;
-      animation: drive 8s linear infinite, bounce 0.5s ease-in-out infinite alternate;
+      animation: drive linear infinite, bounce 0.5s ease-in-out infinite alternate;
     }
 
     .car-icon:nth-child(1) {
+      animation-name: drive, bounce;
+      animation-duration: 6s, 0.5s;
       animation-delay: 0s, 0s;
       fill: #3b82f6;
     }
 
     .car-icon:nth-child(2) {
+      animation-name: drive, bounce;
+      animation-duration: 8s, 0.5s;
       animation-delay: 2s, 0.1s;
       fill: #ef4444;
     }
 
     .car-icon:nth-child(3) {
+      animation-name: drive, bounce;
+      animation-duration: 10s, 0.5s;
       animation-delay: 4s, 0.2s;
       fill: #10b981;
     }
