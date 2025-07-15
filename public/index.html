@@ -231,6 +231,10 @@
       font-size: 0.9rem;
     }
 
+    #bookings-list {
+      padding: 1rem;
+    }
+
     .booking-card {
       display: flex;
       align-items: center;
@@ -515,63 +519,26 @@
 
     .car-animation {
       position: relative;
-      height: 80px;
+      height: 50px;
       width: 100%;
       overflow: hidden;
       margin-bottom: 1rem;
-      background: linear-gradient(to bottom, #a3e635 20%, #4b5563 20%, #4b5563 80%, #a3e635 80%); /* 草地和馬路 */
-    }
-
-    .car-animation::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 8px;
-      background: repeating-linear-gradient(
-        to right,
-        #ffffff,
-        #ffffff 10px,
-        transparent 10px,
-        transparent 20px
-      ); /* 車道線 */
-      transform: translateY(-50%);
-      z-index: 1;
     }
 
     .car-icon {
       position: absolute;
-      width: 40px;
+      width: 48px;
       height: 24px;
-      left: -40px;
-      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.1));
-      z-index: 2;
-    }
-
-    .car-icon:nth-child(1) {
-      top: 20px;
-      animation: drive 6s linear infinite, bounce 0.5s ease-in-out infinite alternate;
-    }
-
-    .car-icon:nth-child(2) {
-      top: 30px;
-      animation: drive 7s linear infinite 1s, bounce 0.6s ease-in-out infinite alternate;
-      fill: #ef4444; /* 不同顏色 */
-    }
-
-    .car-icon:nth-child(3) {
-      top: 40px;
-      animation: drive 8s linear infinite 2s, bounce 0.7s ease-in-out infinite alternate;
-      fill: #10b981; /* 不同顏色 */
+      left: -48px;
+      animation: drive 8s linear infinite, bounce 0.5s ease-in-out infinite alternate;
     }
 
     @keyframes drive {
       0% {
-        left: -40px;
+        left: -48px;
       }
       100% {
-        left: calc(100% + 40px);
+        left: calc(100% + 48px);
       }
     }
 
@@ -739,11 +706,11 @@
       }
 
       .car-animation {
-        height: 60px;
+        height: 40px;
       }
 
       .car-icon {
-        width: 32px;
+        width: 40px;
         height: 20px;
       }
     }
@@ -842,11 +809,11 @@
       }
 
       .car-animation {
-        height: 50px;
+        height: 32px;
       }
 
       .car-icon {
-        width: 28px;
+        width: 32px;
         height: 16px;
       }
     }
@@ -1011,29 +978,11 @@
 
   <div class="calendar-container" id="calendar-container" style="display: none;">
     <div class="car-animation">
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
-        <path fill="#3b82f6" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
-        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
-        <rect x="12" y="8" width="16" height="3" fill="#60a5fa"/><!-- 車窗 -->
-        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
-        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
-      </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
-        <path fill="#ef4444" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
-        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
-        <rect x="12" y="8" width="16" height="3" fill="#f87171"/><!-- 車窗 -->
-        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
-        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
-      </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
-        <path fill="#10b981" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
-        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
-        <rect x="12" y="8" width="16" height="3" fill="#34d399"/><!-- 車窗 -->
-        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
-        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#3b82f6">
+        <path d="M40 12H8a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H6v-2a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
+        <circle cx="12" cy="18" r="2"/>
+        <circle cx="36" cy="18" r="2"/>
+        <path d="M8 10h32l-2-4H10l-2 4z"/>
       </svg>
     </div>
     <h3 class="text-center mb-4">預約日曆</h3>
@@ -1781,4 +1730,26 @@
       endTimeSelect.addEventListener('change', validateTimeSelection);
     }
 
-    // 初始化應用
+    // 初始化應用程式
+    function initApp() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        loginContainer.style.display = 'none';
+        showLoadingOverlay();
+        bookingContainer.style.display = 'block';
+        calendarContainer.style.display = 'block';
+        bookingContainer.classList.add('fade-in');
+        calendarContainer.classList.add('fade-in');
+        setTimeout(() => {
+          setupCalendarObserver();
+          hideLoadingOverlay();
+        }, 800);
+      }
+      initEventListeners();
+    }
+
+    // 啟動應用程式
+    initApp();
+  </script>
+</body>
+</html>
