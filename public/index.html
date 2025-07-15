@@ -517,6 +517,40 @@
       color: #ef4444;
     }
 
+    .car-animation {
+      position: relative;
+      height: 50px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .car-icon {
+      position: absolute;
+      width: 48px;
+      height: 24px;
+      left: -48px;
+      animation: drive 8s linear infinite, bounce 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes drive {
+      0% {
+        left: -48px;
+      }
+      100% {
+        left: calc(100% + 48px);
+      }
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-4px);
+      }
+    }
+
     @keyframes progress {
       0% {
         width: 0;
@@ -670,6 +704,15 @@
       .time-status {
         font-size: 0.8rem;
       }
+
+      .car-animation {
+        height: 40px;
+      }
+
+      .car-icon {
+        width: 40px;
+        height: 20px;
+      }
     }
 
     @media (max-width: 576px) {
@@ -763,6 +806,15 @@
 
       .time-status {
         font-size: 0.75rem;
+      }
+
+      .car-animation {
+        height: 32px;
+      }
+
+      .car-icon {
+        width: 32px;
+        height: 16px;
       }
     }
 
@@ -925,6 +977,14 @@
   </div>
 
   <div class="calendar-container" id="calendar-container" style="display: none;">
+    <div class="car-animation">
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#3b82f6">
+        <path d="M40 12H8a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H6v-2a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
+        <circle cx="12" cy="18" r="2"/>
+        <circle cx="36" cy="18" r="2"/>
+        <path d="M8 10h32l-2-4H10l-2 4z"/>
+      </svg>
+    </div>
     <h3 class="text-center mb-4">預約日曆</h3>
     <button class="btn btn-primary mt-2" id="refresh-calendar">刷新日曆</button>
     <div id="calendar"></div>
