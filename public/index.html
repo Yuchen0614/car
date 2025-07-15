@@ -231,10 +231,6 @@
       font-size: 0.9rem;
     }
 
-    #bookings-list {
-      padding: 1rem;
-    }
-
     .booking-card {
       display: flex;
       align-items: center;
@@ -242,7 +238,7 @@
       border-radius: 8px;
       padding: 0.8rem;
       margin-bottom: 0.8rem;
-      transition: background 0.3s ease;
+      transition: background 0.2s ease;
       gap: 0.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       animation: slideIn 0.5s ease forwards;
@@ -519,107 +515,55 @@
 
     .car-animation {
       position: relative;
-      height: 60px;
+      height: 80px;
       width: 100%;
       overflow: hidden;
       margin-bottom: 1rem;
-      background: #e0f7fa; /* 淺藍天空背景 */
+      background: linear-gradient(to bottom, #a3e635 20%, #4b5563 20%, #4b5563 80%, #a3e635 80%); /* 草地和馬路 */
     }
 
-    .road {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 30px;
-      background: #9ca3af; /* 灰色路面 */
-    }
-
-    .road::before {
+    .car-animation::before {
       content: '';
       position: absolute;
-      top: 12px;
+      top: 50%;
       left: 0;
       width: 100%;
-      height: 4px;
+      height: 8px;
       background: repeating-linear-gradient(
         to right,
         #ffffff,
         #ffffff 10px,
         transparent 10px,
         transparent 20px
-      ); /* 白色虛線車道 */
-    }
-
-    .grass {
-      position: absolute;
-      width: 100%;
-      height: 10px;
-      background: #4ade80; /* 綠色草地 */
-    }
-
-    .grass.top {
-      top: -10px;
-    }
-
-    .grass.bottom {
-      bottom: -10px;
-    }
-
-    .cloud {
-      position: absolute;
-      width: 30px;
-      height: 15px;
-      background: #ffffff;
-      border-radius: 15px;
-      opacity: 0.8;
-      top: 5px;
-      animation: float 12s linear infinite;
-    }
-
-    .cloud:nth-child(1) {
-      left: -30px;
-      animation-delay: 0s;
-    }
-
-    .cloud:nth-child(2) {
-      left: -30px;
-      top: 15px;
-      width: 40px;
-      height: 20px;
-      animation-delay: 4s;
-    }
-
-    .cloud:nth-child(3) {
-      left: -30px;
-      top: 10px;
-      width: 25px;
-      height: 12px;
-      animation-delay: 8s;
+      ); /* 車道線 */
+      transform: translateY(-50%);
+      z-index: 1;
     }
 
     .car-icon {
       position: absolute;
       width: 40px;
-      height: 20px;
-      bottom: 5px;
+      height: 24px;
+      left: -40px;
       filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.1));
+      z-index: 2;
     }
 
     .car-icon:nth-child(1) {
-      left: -40px;
-      animation: drive 7s linear infinite, bounce 0.5s ease-in-out infinite alternate;
+      top: 20px;
+      animation: drive 6s linear infinite, bounce 0.5s ease-in-out infinite alternate;
     }
 
     .car-icon:nth-child(2) {
-      left: -100px;
-      animation: drive 8s linear infinite, bounce 0.5s ease-in-out infinite alternate;
-      animation-delay: 2s;
+      top: 30px;
+      animation: drive 7s linear infinite 1s, bounce 0.6s ease-in-out infinite alternate;
+      fill: #ef4444; /* 不同顏色 */
     }
 
     .car-icon:nth-child(3) {
-      left: -160px;
-      animation: drive 9s linear infinite, bounce 0.5s ease-in-out infinite alternate;
-      animation-delay: 4s;
+      top: 40px;
+      animation: drive 8s linear infinite 2s, bounce 0.7s ease-in-out infinite alternate;
+      fill: #10b981; /* 不同顏色 */
     }
 
     @keyframes drive {
@@ -637,15 +581,6 @@
       }
       100% {
         transform: translateY(-4px);
-      }
-    }
-
-    @keyframes float {
-      0% {
-        left: calc(100% + 40px);
-      }
-      100% {
-        left: -40px;
       }
     }
 
@@ -804,40 +739,12 @@
       }
 
       .car-animation {
-        height: 50px;
-      }
-
-      .road {
-        height: 25px;
-      }
-
-      .road::before {
-        top: 10px;
-        height: 3px;
-      }
-
-      .grass {
-        height: 8px;
-      }
-
-      .cloud {
-        width: 25px;
-        height: 12px;
-      }
-
-      .cloud:nth-child(2) {
-        width: 35px;
-        height: 17px;
-      }
-
-      .cloud:nth-child(3) {
-        width: 20px;
-        height: 10px;
+        height: 60px;
       }
 
       .car-icon {
-        width: 36px;
-        height: 18px;
+        width: 32px;
+        height: 20px;
       }
     }
 
@@ -935,39 +842,11 @@
       }
 
       .car-animation {
-        height: 40px;
-      }
-
-      .road {
-        height: 20px;
-      }
-
-      .road::before {
-        top: 8px;
-        height: 2px;
-      }
-
-      .grass {
-        height: 6px;
-      }
-
-      .cloud {
-        width: 20px;
-        height: 10px;
-      }
-
-      .cloud:nth-child(2) {
-        width: 30px;
-        height: 15px;
-      }
-
-      .cloud:nth-child(3) {
-        width: 15px;
-        height: 8px;
+        height: 50px;
       }
 
       .car-icon {
-        width: 32px;
+        width: 28px;
         height: 16px;
       }
     }
@@ -1021,38 +900,6 @@
 
       .time-status {
         font-size: 0.9rem;
-      }
-
-      .car-animation {
-        height: 70px;
-      }
-
-      .road {
-        height: 35px;
-      }
-
-      .road::before {
-        top: 14px;
-        height: 5px;
-      }
-
-      .grass {
-        height: 12px;
-      }
-
-      .cloud {
-        width: 35px;
-        height: 18px;
-      }
-
-      .cloud:nth-child(2) {
-        width: 45px;
-        height: 22px;
-      }
-
-      .cloud:nth-child(3) {
-        width: 30px;
-        height: 15px;
       }
     }
   </style>
@@ -1164,56 +1011,29 @@
 
   <div class="calendar-container" id="calendar-container" style="display: none;">
     <div class="car-animation">
-      <div class="grass top"></div>
-      <div class="road"></div>
-      <div class="grass bottom"></div>
-      <div class="cloud"></div>
-      <div class="cloud"></div>
-      <div class="cloud"></div>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20">
-        <defs>
-          <linearGradient id="carGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#fb923c;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <path fill="url(#carGradient1)" d="M6 6h28a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="10" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="30" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="10" cy="8" r="2" fill="#fef3c7"/><!-- 左大燈 -->
-        <circle cx="30" cy="8" r="2" fill="#fef3c7"/><!-- 右大燈 -->
-        <path fill="#bfdbfe" d="M12 6h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H12a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><!-- 車窗 -->
-        <path fill="#1f2937" d="M14 7.5a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5zm12 0a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5z"/><!-- 微笑表情 -->
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
+        <path fill="#3b82f6" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
+        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
+        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
+        <rect x="12" y="8" width="16" height="3" fill="#60a5fa"/><!-- 車窗 -->
+        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
+        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20">
-        <defs>
-          <linearGradient id="carGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#f9a8d4;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <path fill="url(#carGradient2)" d="M6 6h28a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="10" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="30" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="10" cy="8" r="2" fill="#fef3c7"/>
-        <circle cx="30" cy="8" r="2" fill="#fef3c7"/>
-        <path fill="#bfdbfe" d="M12 6h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H12a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/>
-        <path fill="#1f2937" d="M14 7.5a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5zm12 0a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5z"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
+        <path fill="#ef4444" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
+        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
+        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
+        <rect x="12" y="8" width="16" height="3" fill="#f87171"/><!-- 車窗 -->
+        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
+        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20">
-        <defs>
-          <linearGradient id="carGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#2dd4bf;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#5eead4;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <path fill="url(#carGradient3)" d="M6 6h28a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
-        <circle cx="10" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="30" cy="15" r="2" fill="#1f2937"/>
-        <circle cx="10" cy="8" r="2" fill="#fef3c7"/>
-        <circle cx="30" cy="8" r="2" fill="#fef3c7"/>
-        <path fill="#bfdbfe" d="M12 6h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H12a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/>
-        <path fill="#1f2937" d="M14 7.5a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5zm12 0a0.5 0.5 0 0 1 .5.5v1a0.5 0.5 0 0 1-.5.5.5 0.5 0 0 1-.5-.5v-1a0.5 0.5 0 0 1 .5-.5z"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
+        <path fill="#10b981" d="M10 6h20a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2h-2a2 2 0 1 0 0 4h2a2 2 0 0 0 2-2V9a3 3 0 0 0-3-3H10a3 3 0 0 0-3 3v6a2 2 0 0 0 2 2h2a2 2 0 1 0 0-4H9a2 2 0 0 1-2-2V9a3 3 0 0 1 3-3z"/>
+        <circle cx="12" cy="17" r="2" fill="#1f2937"/>
+        <circle cx="28" cy="17" r="2" fill="#1f2937"/>
+        <rect x="12" y="8" width="16" height="3" fill="#34d399"/><!-- 車窗 -->
+        <circle cx="15" cy="8" r="1" fill="#fef3c7"/><!-- 左大燈 -->
+        <circle cx="25" cy="8" r="1" fill="#fef3c7"/><!-- 右大燈 -->
       </svg>
     </div>
     <h3 class="text-center mb-4">預約日曆</h3>
@@ -1760,4 +1580,205 @@
                 ${booking.name || '未知'}
               </div>
               <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
+                ${booking.starttime?.slice(0, 5) || '未知'}-${booking.endtime?.slice(0, 5) || '未知'}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+                ${booking.reason || '無'}
+              </div>
+            </div>
+            <button class="btn btn-danger cancel-btn" data-booking-id="${bookingId}" onclick="showCancelModal('${bookingId}')">取消</button>
+          </div>`;
+      }).join('');
+    }
+
+    // 顯示取消模態框
+    function showCancelModal(bookingId) {
+      if (!bookingId) {
+        console.error('showCancelModal 接收到無效的 bookingId:', bookingId);
+        showNotification('❗ 錯誤：無法顯示取消視窗，預約ID無效', false);
+        return;
+      }
+      const cancelBookingIdInput = document.getElementById('cancel-booking-id');
+      cancelBookingIdInput.value = bookingId;
+      cancelModal.show();
+    }
+
+    // 初始化日曆
+    function initCalendar() {
+      const calendarEl = document.getElementById('calendar');
+      if (!calendarEl) {
+        console.error('Calendar element not found');
+        showNotification('❗ 初始化日曆失敗：無法找到日曆元素', false);
+        return;
+      }
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        initialDate: new Date(),
+        dateClick: async function(info) {
+          const selectedDate = info.dateStr;
+          document.querySelector('.loading').style.display = 'block';
+          document.getElementById('bookings-list').style.display = 'none';
+          document.getElementById('no-bookings').style.display = 'none';
+          document.getElementById('timeline-container').style.display = 'none';
+          try {
+            const bookings = await fetchBookings();
+            const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
+            renderBookingsList(filteredBookings, selectedDate);
+            document.getElementById('bookingsModalLabel').textContent = `${selectedDate} 的預約`;
+            document.querySelector('.loading').style.display = 'none';
+            bookingsModal.show();
+          } catch (error) {
+            console.error('載入預約錯誤:', error);
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById('no-bookings').style.display = 'block';
+            document.getElementById('no-bookings').innerHTML = `<p>無法載入預約資料：${error.message}</p>`;
+          }
+        },
+        events: [],
+        datesSet: async function(info) {
+          await updateCalendarColors();
+        }
+      });
+
+      calendar.render();
+      calendarEl._calendar = calendar;
+
+      calendarEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const activeElement = document.activeElement;
+          if (activeElement.classList.contains('fc-daygrid-day')) {
+            const date = activeElement.getAttribute('data-date');
+            calendar.select(date);
+            activeElement.click();
+          }
+        }
+      });
+    }
+
+    // 更新日曆顏色
+    async function updateCalendarColors() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showNotification('❗ 錯誤：未找到身份驗證令牌，請重新登錄', false);
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        bookingContainer.style.display = 'none';
+        calendarContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        loginContainer.classList.add('fade-in');
+        return;
+      }
+
+      const bookings = await fetchBookings();
+      const calendarEl = document.getElementById('calendar');
+      const calendar = calendarEl?._calendar;
+      if (!calendar) {
+        console.warn('Calendar not initialized');
+        showNotification('❗ 日曆未初始化', false);
+        return;
+      }
+
+      calendar.getEvents().forEach(event => event.remove());
+
+      bookings.forEach(booking => {
+        const startTime = booking.starttime?.slice(0, 5) || '未知';
+        const endTime = booking.endtime?.slice(0, 5) || '未知';
+        const date = new Date(booking.date).toISOString().split('T')[0];
+
+        calendar.addEvent({
+          title: `${booking.department || '未知'} (${startTime}-${endTime})`,
+          start: date,
+          allDay: true,
+          classNames: ['bg-booked'],
+          extendedProps: {
+            department: booking.department || '未知',
+            name: booking.name || '未知',
+            reason: booking.reason || '無'
+          }
+        });
+      });
+
+      const bookedDates = [...new Set(bookings.map(b => new Date(b.date).toISOString().split('T')[0]))];
+      const todayStr = new Date().toISOString().split('T')[0];
+      const days = document.querySelectorAll('.fc-daygrid-day');
+      days.forEach(day => {
+        const date = day.getAttribute('data-date');
+        const dayFrame = day.querySelector('.fc-daygrid-day-frame');
+        day.setAttribute('tabindex', '0');
+        day.setAttribute('aria-label', `日期 ${date}${bookedDates.includes(date) ? '，有預約' : '，可預約'}`);
+
+        if (date === todayStr) {
+          day.classList.add('today');
+        } else {
+          day.classList.remove('today');
+        }
+
+        if (bookedDates.includes(date)) {
+          day.classList.add('bg-booked');
+          day.classList.remove('available');
+          const dayBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === date);
+          dayBookings.sort((a, b) => {
+            const aSum = toMinutes(a.starttime || '08:00') + toMinutes(a.endtime || '09:00');
+            const bSum = toMinutes(b.starttime || '08:00') + toMinutes(b.endtime || '09:00');
+            return aSum - bSum;
+          });
+          if (dayFrame) {
+            dayFrame.setAttribute('data-bs-toggle', 'tooltip');
+            dayFrame.setAttribute('data-bs-placement', 'top');
+            dayFrame.setAttribute('title', dayBookings
+              .map(b => `${b.department || '未知'} ${b.starttime?.slice(0, 5) || '未知'}-${b.endtime?.slice(0, 5) || '未知'}: ${b.reason || '無'}`)
+              .join('\n'));
+          }
+        } else {
+          day.classList.remove('bg-booked');
+          day.classList.add('available');
+          if (dayFrame) {
+            dayFrame.style.backgroundColor = '';
+            dayFrame.removeAttribute('data-bs-toggle');
+            dayFrame.removeAttribute('data-bs-placement');
+            dayFrame.removeAttribute('title');
+          }
+        }
+      });
+
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    }
+
+    // 初始化與事件綁定
+    function setupCalendarObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            initCalendar();
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(calendarContainer);
+    }
+
+    // 初始化事件監聽器
+    function initEventListeners() {
+      loginForm.addEventListener('submit', handleLogin);
+      logoutBtn.addEventListener('click', handleLogout);
+      bookingForm.addEventListener('submit', handleBookingSubmit);
+      cancelForm.addEventListener('submit', handleCancelSubmit);
+      document.getElementById('refresh-calendar').addEventListener('click', () => {
+        cachedBookings = null;
+        cacheTimestamp = null;
+        updateCalendarColors();
+      });
+      dateInput.addEventListener('change', debounce(updateTimeOptions, 300));
+      startTimeSelect.addEventListener('change', () => {
+        updateEndTimeOptions();
+        validateTimeSelection();
+      });
+      endTimeSelect.addEventListener('change', validateTimeSelection);
+    }
+
+    // 初始化應用
