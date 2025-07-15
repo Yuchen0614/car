@@ -523,33 +523,15 @@
       width: 100%;
       overflow: hidden;
       margin-bottom: 1rem;
-      background: linear-gradient(to bottom, #a3e635 20%, #4b5563 20%, #4b5563 60%, #a3e635 60%);
-      border-radius: 8px;
-    }
-
-    .car-animation::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: repeating-linear-gradient(
-        90deg,
-        #ffffff,
-        #ffffff 10px,
-        transparent 10px,
-        transparent 20px
-      );
-      transform: translateY(-50%);
+      background: transparent;
     }
 
     .car-icon {
       position: absolute;
-      width: 48px;
-      height: 24px;
-      left: -48px;
-      top: 40%;
+      width: 60px;
+      height: 30px;
+      left: -60px;
+      top: 50%;
       transform: translateY(-50%);
     }
 
@@ -570,10 +552,10 @@
 
     @keyframes drive {
       0% {
-        left: -48px;
+        left: -60px;
       }
       100% {
-        left: calc(100% + 48px);
+        left: calc(100% + 60px);
       }
     }
 
@@ -745,8 +727,8 @@
       }
 
       .car-icon {
-        width: 40px;
-        height: 20px;
+        width: 48px;
+        height: 24px;
       }
     }
 
@@ -848,8 +830,8 @@
       }
 
       .car-icon {
-        width: 32px;
-        height: 16px;
+        width: 40px;
+        height: 20px;
       }
     }
 
@@ -1013,29 +995,35 @@
 
   <div class="calendar-container" id="calendar-container" style="display: none;">
     <div class="car-animation">
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#ff6b6b">
-        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
-        <circle cx="8" cy="18" r="2"/>
-        <circle cx="40" cy="18" r="2"/>
-        <path d="M4 8h40l-2-4H6l-2 4z"/>
-        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
-        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" fill="#ff6b6b">
+        <path d="M54 14H6a4 4 0 0 0-4 4v3a2 2 0 0 0 2 2h6a3 3 0 1 0 0-6H4v-3a2 2 0 0 1 2-2h48a2 2 0 0 1 2 2v3h-6a3 3 0 1 0 0 6h6a2 2 0 0 0 2-2v-3a4 4 0 0 0-4-4z"/>
+        <path d="M6 10h48l-3-6H9l-3 6z" fill="#ff6b6b"/>
+        <circle cx="12" cy="23" r="3" fill="#1f2937"/>
+        <circle cx="48" cy="23" r="3" fill="#1f2937"/>
+        <rect x="15" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <rect x="35" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <circle cx="8" cy="12" r="1" fill="#fef08a"/>
+        <circle cx="52" cy="12" r="1" fill="#fef08a"/>
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#60a5fa">
-        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
-        <circle cx="8" cy="18" r="2"/>
-        <circle cx="40" cy="18" r="2"/>
-        <path d="M4 8h40l-2-4H6l-2 4z"/>
-        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
-        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" fill="#60a5fa">
+        <path d="M54 14H6a4 4 0 0 0-4 4v3a2 2 0 0 0 2 2h6a3 3 0 1 0 0-6H4v-3a2 2 0 0 1 2-2h48a2 2 0 0 1 2 2v3h-6a3 3 0 1 0 0 6h6a2 2 0 0 0 2-2v-3a4 4 0 0 0-4-4z"/>
+        <path d="M6 10h48l-3-6H9l-3 6z" fill="#60a5fa"/>
+        <circle cx="12" cy="23" r="3" fill="#1f2937"/>
+        <circle cx="48" cy="23" r="3" fill="#1f2937"/>
+        <rect x="15" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <rect x="35" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <circle cx="8" cy="12" r="1" fill="#fef08a"/>
+        <circle cx="52" cy="12" r="1" fill="#fef08a"/>
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#34d399">
-        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
-        <circle cx="8" cy="18" r="2"/>
-        <circle cx="40" cy="18" r="2"/>
-        <path d="M4 8h40l-2-4H6l-2 4z"/>
-        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
-        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" fill="#34d399">
+        <path d="M54 14H6a4 4 0 0 0-4 4v3a2 2 0 0 0 2 2h6a3 3 0 1 0 0-6H4v-3a2 2 0 0 1 2-2h48a2 2 0 0 1 2 2v3h-6a3 3 0 1 0 0 6h6a2 2 0 0 0 2-2v-3a4 4 0 0 0-4-4z"/>
+        <path d="M6 10h48l-3-6H9l-3 6z" fill="#34d399"/>
+        <circle cx="12" cy="23" r="3" fill="#1f2937"/>
+        <circle cx="48" cy="23" r="3" fill="#1f2937"/>
+        <rect x="15" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <rect x="35" y="8" width="10" height="4" rx="1" fill="#ffffff"/>
+        <circle cx="8" cy="12" r="1" fill="#fef08a"/>
+        <circle cx="52" cy="12" r="1" fill="#fef08a"/>
       </svg>
     </div>
     <h3 class="text-center mb-4">預約日曆</h3>
@@ -1750,26 +1738,8 @@
       tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 
-    // 初始化與事件綁定
-    function setupCalendarObserver() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            initCalendar();
-            observer.disconnect();
-          }
-        });
-      }, { threshold: 0.1 });
-
-      observer.observe(calendarContainer);
-    }
-
-    // 初始化事件監聽器
-    function initEventListeners() {
-      loginForm.addEventListener('submit', handleLogin);
-      bookingForm.addEventListener('submit', handleBookingSubmit);
-      cancelForm.addEventListener('submit', handleCancelSubmit);
-      logoutBtn.addEventListener('click', handleLogout);
+    // 初始化與事件
+    logoutBtn.addEventListener('click', handleLogout);
       dateInput.addEventListener('change', debounce(updateTimeOptions, 300));
       startTimeSelect.addEventListener('change', () => {
         updateEndTimeOptions();
@@ -1796,6 +1766,7 @@
         bookingContainer.classList.add('fade-in');
         calendarContainer.classList.add('fade-in');
         setTimeout(() => {
+          initCalendar();
           setupCalendarObserver();
           hideLoadingOverlay();
         }, 800);
