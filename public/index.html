@@ -519,10 +519,29 @@
 
     .car-animation {
       position: relative;
-      height: 50px;
+      height: 80px;
       width: 100%;
       overflow: hidden;
       margin-bottom: 1rem;
+      background: linear-gradient(to bottom, #a3e635 20%, #4b5563 20%, #4b5563 60%, #a3e635 60%);
+      border-radius: 8px;
+    }
+
+    .car-animation::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        #ffffff,
+        #ffffff 10px,
+        transparent 10px,
+        transparent 20px
+      );
+      transform: translateY(-50%);
     }
 
     .car-icon {
@@ -530,7 +549,23 @@
       width: 48px;
       height: 24px;
       left: -48px;
+      top: 40%;
+      transform: translateY(-50%);
+    }
+
+    .car-icon:nth-child(1) {
       animation: drive 8s linear infinite, bounce 0.5s ease-in-out infinite alternate;
+      fill: #ff6b6b;
+    }
+
+    .car-icon:nth-child(2) {
+      animation: drive 10s linear infinite 2s, bounce 0.5s ease-in-out infinite alternate 0.2s;
+      fill: #60a5fa;
+    }
+
+    .car-icon:nth-child(3) {
+      animation: drive 9s linear infinite 4s, bounce 0.5s ease-in-out infinite alternate 0.4s;
+      fill: #34d399;
     }
 
     @keyframes drive {
@@ -544,10 +579,10 @@
 
     @keyframes bounce {
       0% {
-        transform: translateY(0);
+        transform: translateY(-50%);
       }
       100% {
-        transform: translateY(-4px);
+        transform: translateY(calc(-50% - 4px));
       }
     }
 
@@ -706,7 +741,7 @@
       }
 
       .car-animation {
-        height: 40px;
+        height: 60px;
       }
 
       .car-icon {
@@ -809,7 +844,7 @@
       }
 
       .car-animation {
-        height: 32px;
+        height: 50px;
       }
 
       .car-icon {
@@ -978,11 +1013,29 @@
 
   <div class="calendar-container" id="calendar-container" style="display: none;">
     <div class="car-animation">
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#3b82f6">
-        <path d="M40 12H8a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H6v-2a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
-        <circle cx="12" cy="18" r="2"/>
-        <circle cx="36" cy="18" r="2"/>
-        <path d="M8 10h32l-2-4H10l-2 4z"/>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#ff6b6b">
+        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
+        <circle cx="8" cy="18" r="2"/>
+        <circle cx="40" cy="18" r="2"/>
+        <path d="M4 8h40l-2-4H6l-2 4z"/>
+        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
+        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
+      </svg>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#60a5fa">
+        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
+        <circle cx="8" cy="18" r="2"/>
+        <circle cx="40" cy="18" r="2"/>
+        <path d="M4 8h40l-2-4H6l-2 4z"/>
+        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
+        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
+      </svg>
+      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" fill="#34d399">
+        <path d="M44 12H4a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h4a2 2 0 1 0 0-4H2v-2a2 2 0 0 1 2-2h40a2 2 0 0 1 2 2v2h-4a2 2 0 1 0 0 4h4a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z"/>
+        <circle cx="8" cy="18" r="2"/>
+        <circle cx="40" cy="18" r="2"/>
+        <path d="M4 8h40l-2-4H6l-2 4z"/>
+        <circle cx="24" cy="10" r="4" fill="#ffffff"/>
+        <path d="M22 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h-8v-2z" fill="#ffffff"/>
       </svg>
     </div>
     <h3 class="text-center mb-4">預約日曆</h3>
@@ -1714,23 +1767,25 @@
     // 初始化事件監聽器
     function initEventListeners() {
       loginForm.addEventListener('submit', handleLogin);
-      logoutBtn.addEventListener('click', handleLogout);
       bookingForm.addEventListener('submit', handleBookingSubmit);
       cancelForm.addEventListener('submit', handleCancelSubmit);
-      document.getElementById('refresh-calendar').addEventListener('click', () => {
-        cachedBookings = null;
-        cacheTimestamp = null;
-        updateCalendarColors();
-      });
+      logoutBtn.addEventListener('click', handleLogout);
       dateInput.addEventListener('change', debounce(updateTimeOptions, 300));
       startTimeSelect.addEventListener('change', () => {
         updateEndTimeOptions();
         validateTimeSelection();
       });
       endTimeSelect.addEventListener('change', validateTimeSelection);
+      document.getElementById('refresh-calendar').addEventListener('click', async () => {
+        cachedBookings = null;
+        cacheTimestamp = null;
+        showLoadingOverlay();
+        await updateCalendarColors();
+        hideLoadingOverlay();
+      });
     }
 
-    // 初始化應用程式
+    // 初始化應用
     function initApp() {
       const token = localStorage.getItem('token');
       if (token) {
@@ -1744,12 +1799,15 @@
           setupCalendarObserver();
           hideLoadingOverlay();
         }, 800);
+      } else {
+        loginContainer.style.display = 'block';
+        loginContainer.classList.add('fade-in');
       }
-      initEventListeners();
+
+      dateInput.value = '';
+      updateTimeOptions();
     }
 
-    // 啟動應用程式
-    initApp();
+    // 頁面加載時初始化
+    document.addEventListener('DOMContentLoaded', initApp);
   </script>
-</body>
-</html>
