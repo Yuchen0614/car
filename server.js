@@ -15,13 +15,17 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// 配置連線池
+// 配置連線池，強制使用 IPv4 並優化參數
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
+  ssl: {
+    rejectUnauthorized: false, // 允許自簽證書，與 Supabase 相容
+    require: true             // 強制使用 SSL
+  },
+  max: 10,                    // 降低連線數，避免超限
+  idleTimeoutMillis: 30000,   // 空閒連線超時 30 秒
+  connectionTimeoutMillis: 10000, // 連線超時 10 秒
+  family: 4                   // 強制使用 IPv4，解決 ENETUNREACH
 });
 
 // 測試連線並創建表格
@@ -29,7 +33,7 @@ const pool = new Pool({
   let client;
   try {
     client = await pool.connect();
-    console.log('Database connection successful');
+    console.log('Connected to database:', pool.options.connectionString);
     const res = await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
@@ -43,7 +47,7 @@ const pool = new Pool({
     `);
     console.log('Table "bookings" created or exists:', res.rowCount);
   } catch (err) {
-    console.error('Table creation error:', err.stack);
+    console.error('Table creation error:', err.stack, 'Connection options:', pool.options);
     process.exit(1);
   } finally {
     if (client) client.release();
