@@ -25,7 +25,8 @@ const pool = new Pool({
   max: 10,                    // 降低連線數，避免超限
   idleTimeoutMillis: 30000,   // 空閒連線超時 30 秒
   connectionTimeoutMillis: 10000, // 連線超時 10 秒
-  family: 4                   // 強制使用 IPv4，解決 ENETUNREACH
+  family: 4,                  // 強制使用 IPv4
+  host: 'db.vylgbxvmsbfmzyrytnrf.supabase.co' // 明確指定主機名
 });
 
 // 測試連線並創建表格
@@ -33,7 +34,7 @@ const pool = new Pool({
   let client;
   try {
     client = await pool.connect();
-    console.log('Connected to database:', pool.options.connectionString);
+    console.log('Successfully connected to database with options:', pool.options);
     const res = await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
