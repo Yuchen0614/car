@@ -5,7 +5,7 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 
-// 調試：顯示環境變數（避免記錄密碼）
+// 調試：檢查環境變數（避免記錄敏感資訊）
 console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 console.log('PORT:', process.env.PORT);
 
@@ -21,7 +21,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false, require: true },
   max: 5, // Neon 免費層級最多 20 個連線，設為 5 以保持安全
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 20000, // 增加到 20 秒以應對 Neon 冷啟動
+  connectionTimeoutMillis: 20000, // 應對 Neon 冷啟動
   family: 4 // 強制使用 IPv4
 });
 
@@ -30,7 +30,7 @@ pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client:', err.stack);
 });
 
-// 測試連線並創建表格（新增重試機制）
+// 測試連線並創建表格（包含重試機制）
 async function connectWithRetry(attempts = 5, delay = 5000) {
   for (let i = 0; i < attempts; i++) {
     let client;
@@ -130,4 +130,21 @@ app.delete('/api/bookings/:id', async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parse
+    const result = await client.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parseInt(id)]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: '預約不存在' });
+    }
+    console.log('Booking deleted, ID:', id, 'row:', result.rows[0]);
+    res.json({ message: '預約已取消', deleted: result.rows[0] });
+  } catch (err) {
+    console.error('Delete error:', err.stack);
+    res.status(500).json({ error: '取消失敗', details: err.message });
+  } finally {
+    if (client) client.release();
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
