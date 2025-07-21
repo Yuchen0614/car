@@ -30,8 +30,10 @@ const pool = new Pool({
   },
   max: 10,                    // 降低連線數，避免超限
   idleTimeoutMillis: 30000,   // 空閒連線超時 30 秒
-  connectionTimeoutMillis: 10000, // 連線超時 10 秒
-  family: 4                   // 強制使用 IPv4
+  connectionTimeoutMillis: 15000, // 增加連線超時至 15 秒
+  family: 4,                  // 強制使用 IPv4
+  // 額外診斷：記錄解析後的地址
+  parseHost: true
 });
 
 // 測試連線並創建表格
