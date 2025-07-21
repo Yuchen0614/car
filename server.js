@@ -15,9 +15,15 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// 配置連線池，強制使用 IPv4 並優化參數
+// 解析連線字串並強制使用 IPv4
+const connectionString = process.env.DATABASE_URL;
+const parsedUrl = new URL(connectionString);
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  user: parsedUrl.username,
+  password: parsedUrl.password,
+  host: parsedUrl.hostname,
+  port: parsedUrl.port,
+  database: parsedUrl.pathname.replace('/', ''),
   ssl: {
     rejectUnauthorized: false, // 允許自簽證書，與 Supabase 相容
     require: true             // 強制使用 SSL
@@ -25,8 +31,7 @@ const pool = new Pool({
   max: 10,                    // 降低連線數，避免超限
   idleTimeoutMillis: 30000,   // 空閒連線超時 30 秒
   connectionTimeoutMillis: 10000, // 連線超時 10 秒
-  family: 4,                  // 強制使用 IPv4
-  host: 'db.vylgbxvmsbfmzyrytnrf.supabase.co' // 明確指定主機名
+  family: 4                   // 強制使用 IPv4
 });
 
 // 測試連線並創建表格
