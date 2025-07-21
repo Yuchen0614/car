@@ -5,8 +5,8 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 
-// 調試：顯示環境變數
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
+// 調試：顯示環境變數（避免記錄密碼）
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 console.log('PORT:', process.env.PORT);
 
 // 檢查環境變數
@@ -15,52 +15,53 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// 解析連線字串並強制使用 IPv4
-const connectionString = process.env.DATABASE_URL;
-const parsedUrl = new URL(connectionString);
+// 配置連線池，針對 Neon 最佳化
 const pool = new Pool({
-  user: parsedUrl.username,
-  password: parsedUrl.password,
-  host: parsedUrl.hostname,
-  port: parsedUrl.port,
-  database: parsedUrl.pathname.replace('/', ''),
-  ssl: {
-    rejectUnauthorized: false, // 允許自簽證書，與 Supabase 相容
-    require: true             // 強制使用 SSL
-  },
-  max: 10,                    // 降低連線數，避免超限
-  idleTimeoutMillis: 30000,   // 空閒連線超時 30 秒
-  connectionTimeoutMillis: 15000, // 增加連線超時至 15 秒
-  family: 4,                  // 強制使用 IPv4
-  // 額外診斷：記錄解析後的地址
-  parseHost: true
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false, require: true },
+  max: 5, // Neon 免費層級最多 20 個連線，設為 5 以保持安全
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 20000, // 增加到 20 秒以應對 Neon 冷啟動
+  family: 4 // 強制使用 IPv4
 });
 
-// 測試連線並創建表格
-(async () => {
-  let client;
-  try {
-    client = await pool.connect();
-    console.log('Successfully connected to database with options:', pool.options);
-    const res = await client.query(`
-      CREATE TABLE IF NOT EXISTS bookings (
-        id SERIAL PRIMARY KEY,
-        department VARCHAR(100),
-        name VARCHAR(100),
-        date DATE,
-        startTime TIME,
-        endTime TIME,
-        reason TEXT
-      )
-    `);
-    console.log('Table "bookings" created or exists:', res.rowCount);
-  } catch (err) {
-    console.error('Table creation error:', err.stack, 'Connection options:', pool.options);
-    process.exit(1);
-  } finally {
-    if (client) client.release();
+// 監聽連線池錯誤
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client:', err.stack);
+});
+
+// 測試連線並創建表格（新增重試機制）
+async function connectWithRetry(attempts = 5, delay = 5000) {
+  for (let i = 0; i < attempts; i++) {
+    let client;
+    try {
+      client = await pool.connect();
+      console.log('Successfully connected to Neon database');
+      const res = await client.query(`
+        CREATE TABLE IF NOT EXISTS bookings (
+          id SERIAL PRIMARY KEY,
+          department VARCHAR(100),
+          name VARCHAR(100),
+          date DATE,
+          startTime TIME,
+          endTime TIME,
+          reason TEXT
+        )
+      `);
+      console.log('Table "bookings" created or exists:', res.rowCount);
+      return;
+    } catch (err) {
+      console.error(`Connection attempt ${i + 1} failed:`, err.stack);
+      if (i < attempts - 1) await new Promise(resolve => setTimeout(resolve, delay));
+    } finally {
+      if (client) client.release();
+    }
   }
-})();
+  console.error('Failed to connect to database after retries');
+  process.exit(1);
+}
+
+connectWithRetry();
 
 app.use(cors());
 app.use(express.json());
@@ -129,21 +130,4 @@ app.delete('/api/bookings/:id', async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parseInt(id)]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: '預約不存在' });
-    }
-    console.log('Booking deleted, ID:', id, 'row:', result.rows[0]);
-    res.json({ message: '預約已取消', deleted: result.rows[0] });
-  } catch (err) {
-    console.error('Delete error:', err.stack);
-    res.status(500).json({ error: '取消失敗', details: err.message });
-  } finally {
-    if (client) client.release();
-  }
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+    const result = await client.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parse
