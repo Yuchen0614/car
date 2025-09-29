@@ -38,17 +38,14 @@ async function connectWithRetry(attempts = 5, delay = 5000) {
       client = await pool.connect();
       console.log('Successfully connected to Neon database');
       const res = await client.query(`
-        CREATE TABLE IF NOT EXISTS bookings (
+        CREATE TABLE IF NOT EXISTS players (
           id SERIAL PRIMARY KEY,
-          department VARCHAR(100),
-          name VARCHAR(100),
-          date DATE,
-          startTime TIME,
-          endTime TIME,
-          reason TEXT
+          name VARCHAR(100) UNIQUE NOT NULL,
+          pushups INTEGER DEFAULT 100,
+          squats INTEGER DEFAULT 100
         )
       `);
-      console.log('Table "bookings" created or exists:', res.rowCount);
+      console.log('Table "players" created or exists:', res.rowCount);
       return;
     } catch (err) {
       console.error(`Connection attempt ${i + 1} failed:`, err.stack);
@@ -71,74 +68,105 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/api/bookings', async (req, res) => {
+app.get('/api/players', async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('SELECT * FROM bookings');
-    console.log('Fetched bookings count:', result.rowCount, 'rows:', result.rows);
+    const result = await client.query('SELECT * FROM players ORDER BY name');
+    console.log('Fetched players count:', result.rowCount, 'rows:', result.rows);
     if (result.rowCount === 0) {
-      console.log('No bookings found in database');
+      console.log('No players found in database');
     }
     res.json(result.rows);
   } catch (err) {
     console.error('Fetch error:', err.stack);
-    res.status(500).json({ error: '無法載取預約', details: err.message });
+    res.status(500).json({ error: '無法載取玩家資料', details: err.message });
   } finally {
     if (client) client.release();
   }
 });
 
-app.post('/api/bookings', async (req, res) => {
-  const { department, name, date, startTime, endTime, reason } = req.body;
-  if (!department || !name || !date || !startTime || !endTime || !reason) {
-    return res.status(400).json({ error: '所有欄位必填' });
-  }
-  if (startTime >= endTime) {
-    return res.status(400).json({ error: '開始時間必須早於結束時間' });
+app.post('/api/players', async (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: '姓名必填' });
   }
   let client;
   try {
     client = await pool.connect();
-    const conflictCheck = await client.query(
-      'SELECT * FROM bookings WHERE date = $1 AND (($2 < endTime AND $2 >= startTime) OR ($3 > startTime AND $3 <= endTime))',
-      [date, startTime, endTime]
-    );
-    if (conflictCheck.rowCount > 0) {
-      return res.status(409).json({ error: '該時間段已被預約' });
-    }
     const result = await client.query(
-      'INSERT INTO bookings (department, name, date, startTime, endTime, reason) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [department, name, date, startTime, endTime, reason]
+      'INSERT INTO players (name) VALUES ($1) RETURNING * ON CONFLICT (name) DO NOTHING',
+      [name]
     );
-    console.log('Booking added:', result.rows[0]);
+    if (result.rowCount === 0) {
+      return res.status(409).json({ error: '玩家姓名已存在' });
+    }
+    console.log('Player added:', result.rows[0]);
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Insert error:', err.stack);
-    res.status(500).json({ error: '儲存失敗' + (err.code === '22P02' ? '（可能時間格式錯誤）' : '') });
+    res.status(500).json({ error: '新增失敗' });
   } finally {
     if (client) client.release();
   }
 });
 
-app.delete('/api/bookings/:id', async (req, res) => {
+app.put('/api/players/:id', async (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
-  if (!password || password !== process.env.CANCEL_PASSWORD) {
-    return res.status(401).json({ error: '無效的取消密碼' });
+  const { pushups, squats } = req.body;
+  if (pushups === undefined && squats === undefined) {
+    return res.status(400).json({ error: '至少更新一項剩餘次數' });
   }
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [parseInt(id)]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: '預約不存在' });
+    const updates = [];
+    const values = [];
+    let index = 1;
+    if (pushups !== undefined) {
+      updates.push(`pushups = $${index++}`);
+      values.push(pushups);
     }
-    console.log('Booking deleted, ID:', id, 'row:', result.rows[0]);
-    res.json({ message: '預約已取消', deleted: result.rows[0] });
+    if (squats !== undefined) {
+      updates.push(`squats = $${index++}`);
+      values.push(squats);
+    }
+    values.push(parseInt(id));
+    const result = await client.query(
+      `UPDATE players SET ${updates.join(', ')} WHERE id = $${index} RETURNING *`,
+      values
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: '玩家不存在' });
+    }
+    console.log('Player updated:', result.rows[0]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Update error:', err.stack);
+    res.status(500).json({ error: '更新失敗', details: err.message });
+  } finally {
+    if (client) client.release();
+  }
+});
+
+app.delete('/api/players/:id', async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+  if (!password || password !== process.env.CANCEL_PASSWORD) {
+    return res.status(401).json({ error: '無效的刪除密碼' });
+  }
+  let client;
+  try {
+    client = await pool.connect();
+    const result = await client.query('DELETE FROM players WHERE id = $1 RETURNING *', [parseInt(id)]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: '玩家不存在' });
+    }
+    console.log('Player deleted, ID:', id, 'row:', result.rows[0]);
+    res.json({ message: '玩家已刪除', deleted: result.rows[0] });
   } catch (err) {
     console.error('Delete error:', err.stack);
-    res.status(500).json({ error: '取消失敗', details: err.message });
+    res.status(500).json({ error: '刪除失敗', details: err.message });
   } finally {
     if (client) client.release();
   }
