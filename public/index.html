@@ -3,31 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>新可大公務車預約</title>
+  <title>撲克籌碼記錄系統</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #e0f2fe 0%, #f3f4f6 100%);
-      font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #1f2937;
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b0764 100%);
+      font-family: 'Roboto', sans-serif;
+      color: #f3f4f6;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
-      font-size: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .container {
-      max-width: 90vw;
-      margin: 2vh auto;
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s ease, opacity 0.5s ease;
+      max-width: 95vw;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, opacity 0.5s ease;
       opacity: 0;
+      transform: translateY(20px);
     }
 
     .container.fade-in {
@@ -36,351 +40,135 @@
     }
 
     .container:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
     }
 
-    h2, h3 {
-      color: #1f2937;
-      font-weight: 500;
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: #1e3a8a;
+      font-weight: 700;
       text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .form-label {
       font-weight: 500;
-      color: #4b5563;
-      font-size: 0.9rem;
+      color: #1f2937;
+      font-size: 1rem;
     }
 
-    .form-control, .form-select, textarea {
+    .form-control {
       border-radius: 8px;
       border: 1px solid #d1d5db;
       transition: all 0.3s ease;
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-      font-size: 0.9rem;
-      padding: 0.5rem;
-      width: 100%;
-      box-sizing: border-box;
+      font-size: 0.95rem;
+      padding: 0.75rem;
     }
 
-    .form-control:focus, .form-select:focus, textarea:focus {
+    .form-control:focus {
       border-color: #3b82f6;
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
       outline: none;
-    }
-
-    .form-select option:disabled {
-      background-color: #f3f4f6;
-      color: #6b7280;
-      opacity: 0.6;
     }
 
     .btn-primary {
       background: #3b82f6;
       border: none;
       border-radius: 8px;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1.5rem;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 1rem;
       transition: background 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-primary:hover {
       background: #2563eb;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-secondary {
-      background: #6b7280;
-      border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background: #4b5563;
-      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
 
     .btn-danger {
       background: #ef4444;
       border: none;
       border-radius: 8px;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 1rem;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: background 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-danger:hover {
       background: #dc2626;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
     }
 
-    .calendar-container {
-      max-width: 90vw;
-      margin: 2vh auto;
-      background: #ffffff;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: opacity 0.5s ease;
-      opacity: 0;
-    }
-
-    .calendar-container.fade-in {
-      opacity: 1;
-    }
-
-    #calendar {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      overflow: hidden;
-    }
-
-    .fc-daygrid-day {
-      border-radius: 8px;
-      transition: filter 0.2s ease;
-      position: relative;
-    }
-
-    .fc-daygrid-day.bg-booked {
-      border: 2px solid #3b82f6;
-    }
-
-    .fc-daygrid-day.bg-booked .fc-daygrid-day-frame {
-      background: #e0f2fe !important;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-      padding: 2px;
-    }
-
-    .fc-daygrid-day.available .fc-daygrid-day-frame {
-      background: #ffffff !important;
-      border-radius: 8px;
-    }
-
-    .fc-daygrid-day.today {
-      border: 3px solid #3b82f6;
-    }
-
-    .fc-daygrid-day:hover {
-      filter: brightness(1.1);
-      cursor: pointer;
-    }
-
-    .fc-daygrid-day-number {
-      font-weight: 500;
-      color: #1f2937;
-      font-size: 0.85rem;
-    }
-
-    .fc-daygrid-day-frame {
-      border-radius: 8px;
-      min-height: 50px;
-      position: relative;
-    }
-
-    .fc-button {
-      background: #3b82f6 !important;
-      border: none !important;
-      border-radius: 8px !important;
-      padding: 0.4rem 0.8rem !important;
-      font-weight: 500 !important;
-      font-size: 0.85rem !important;
-      transition: background 0.2s ease, box-shadow 0.2s ease !important;
-    }
-
-    .fc-button:hover {
-      background: #2563eb !important;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-    }
-
-    .fc-toolbar-title {
-      font-size: 1rem !important;
-      color: #1f2937;
-    }
-
-    .no-bookings {
-      text-align: center;
-      padding: 2rem;
-      color: #6b7280;
-    }
-
-    .no-bookings svg {
-      width: 2.5rem;
-      height: 2.5rem;
-      fill: #6b7280;
-      margin-bottom: 0.5rem;
-    }
-
-    .no-bookings p {
-      font-size: 0.9rem;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 1rem;
-      display: none;
-      color: #3b82f6;
-      font-size: 0.9rem;
-    }
-
-    #bookings-list {
-      padding: 1rem;
-    }
-
-    .booking-card {
+    .player-card {
       display: flex;
       align-items: center;
       background: #f9fafb;
-      border-radius: 8px;
-      padding: 0.8rem;
-      margin-bottom: 0.8rem;
-      transition: background 0.2s ease;
-      gap: 0.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       animation: slideIn 0.5s ease forwards;
     }
 
-    .booking-card:hover {
-      background: #f3f4f6;
+    .player-card:hover {
+      background: #e5e7eb;
+      transform: translateX(5px);
     }
 
-    .booking-info {
+    .player-info {
       flex: 1;
       display: flex;
       flex-direction: row;
-      gap: 1rem;
-      font-size: 0.85rem;
+      gap: 1.5rem;
+      font-size: 0.95rem;
       color: #1f2937;
       align-items: center;
     }
 
-    .booking-info div {
+    .player-info div {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      min-width: 80px;
-      flex: 1;
+      gap: 0.5rem;
+      min-width: 120px;
     }
 
-    .booking-info svg {
-      width: 1rem;
-      height: 1rem;
+    .player-info svg {
+      width: 1.2rem;
+      height: 1.2rem;
       fill: #3b82f6;
     }
 
-    .cancel-btn {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
-    .modal-content {
-      border-radius: 12px;
-      border: none;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      animation: modalSlideIn 0.3s ease;
-    }
-
-    .modal-header {
-      background: #3b82f6;
-      color: #ffffff;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-
-    .modal-title {
-      font-weight: 500;
-      font-size: 1rem;
-    }
-
-    .modal-body {
-      padding: 1rem;
-    }
-
-    .modal-footer {
-      border-top: none;
-      padding: 0.8rem;
-    }
-
-    .modal-footer .btn {
-      font-size: 0.85rem;
-    }
-
-    .timeline-container {
-      margin: 1rem 0;
-      padding: 0.5rem;
-      background: #f9fafb;
-      border-radius: 8px;
-      position: relative;
-      height: 80px;
-    }
-
-    .timeline {
-      position: relative;
-      height: 100%;
-      border-bottom: 1px solid #d1d5db;
-    }
-
-    .timeline-ticks {
+    .update-form {
       display: flex;
-      justify-content: space-between;
-      position: absolute;
-      top: -20px;
-      width: 100%;
-      font-size: 0.75rem;
-      color: #6-B7280;
-    }
-
-    .timeline-tick {
-      text-align: center;
-      width: 7.69%;
-    }
-
-    .timeline-bar {
-      position: absolute;
-      height: 20px;
-      background: #3b82f6;
-      border-radius: 4px;
-      top: 20px;
-      display: flex;
+      gap: 0.75rem;
       align-items: center;
-      padding: 0 5px;
-      color: #ffffff;
-      font-size: 0.7rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      animation: growWidth 1s ease-in-out forwards;
-      width: 0;
     }
 
-    .timeline-bar:hover {
-      background: #2563eb;
+    .update-form input {
+      width: 100px;
+      padding: 0.5rem;
+      font-size: 0.9rem;
     }
 
     .notification-message {
       position: fixed;
-      top: 20vh;
+      top: 15vh;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
-      max-width: 400px;
-      min-height: 60px;
-      padding: 12px;
-      border-radius: 8px;
+      max-width: 450px;
+      min-height: 70px;
+      padding: 1rem;
+      border-radius: 12px;
       font-family: 'Roboto', sans-serif;
       font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
       z-index: 10000;
       display: flex;
       align-items: center;
@@ -396,31 +184,135 @@
     }
 
     .success-message {
-      background-color: #e6f3ff;
-      color: #1f2937;
-      border-left: 4px solid #3b82f6;
+      background-color: #d1fae5;
+      color: #065f46;
+      border-left: 5px solid #10b981;
     }
 
     .error-message {
       background-color: #fef2f2;
       color: #991b1b;
-      border-left: 4px solid #ef4444;
+      border-left: 5px solid #ef4444;
     }
 
     .elegant-text {
       font-weight: 500;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.9rem;
+      gap: 0.5rem;
+      font-size: 1rem;
       margin: 0;
-      width: 100%;
       text-align: center;
     }
 
     .elegant-text span.emoji {
-      font-size: 0.9rem;
+      font-size: 1.2rem;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(17, 24, 39, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 20000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #loading-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .progress-container {
+      width: 70%;
+      max-width: 500px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      height: 14px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 8px;
+      animation: progress 1s ease-in-out forwards;
+    }
+
+    .progress-percentage {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f3f4f6;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .chip-animation {
+      position: relative;
+      height: 80px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .chip-icon {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      left: -50px;
+      animation: slideChip 8s linear infinite;
+    }
+
+    .chip-icon:nth-child(1) {
+      animation-delay: 0s;
+      fill: #ef4444;
+    }
+
+    .chip-icon:nth-child(2) {
+      animation-delay: 2s;
+      fill: #3b82f6;
+    }
+
+    .chip-icon:nth-child(3) {
+      animation-delay: 4s;
+      fill: #10b981;
+    }
+
+    @keyframes slideChip {
+      0% {
+        left: -50px;
+        transform: rotate(0deg);
+      }
+      100% {
+        left: calc(100% + 50px);
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes progress {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @keyframes centeredFadeInDown {
@@ -446,170 +338,11 @@
     }
 
     .notification-message.show.animate__animated {
-      animation: centered fadeInDown 0.5s ease forwards;
+      animation: centeredFadeInDown 0.5s ease forwards;
     }
 
     .notification-message.animate__fadeOutUp {
       animation: centeredFadeOutUp 0.5s ease forwards;
-    }
-
-    #loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(255, 255, 255, 0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 20000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    #loading-overlay.show {
-      display: flex;
-      opacity: 1;
-    }
-
-    .progress-container {
-      width: 80%;
-      max-width: 600px;
-      background: linear-gradient(90deg, #e5e7eb, #f3f4f6);
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      height: 12px;
-      overflow: hidden;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-bar {
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      border-radius: 6px;
-      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-      animation: progress 0.8s ease-in-out forwards;
-    }
-
-    .progress-percentage {
-      font-family: 'Roboto', sans-serif;
-      font-size: 18px;
-      font-weight: 500;
-      color: #3b82f6;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .time-status {
-      font-size: 0.85rem;
-      margin-top: 0.3rem;
-      transition: color 0.3s ease;
-    }
-
-    .time-status.available {
-      color: #3b82f6;
-    }
-
-    .time-status.unavailable {
-      color: #ef4444;
-    }
-
-    .car-animation {
-      position: relative;
-      height: 60px;
-      width: 100%;
-      overflow: hidden;
-      margin-bottom: 1rem;
-    }
-
-    .car-icon {
-      position: absolute;
-      width: 60px;
-      height: 30px;
-      left: -60px;
-      animation: drive linear infinite, bounce 0.5s ease-in-out infinite alternate;
-    }
-
-    .car-icon:nth-child(1) {
-      animation-name: drive, bounce;
-      animation-duration: 6s, 0.5s;
-      animation-delay: 0s, 0s;
-      fill: #3b82f6;
-    }
-
-    .car-icon:nth-child(2) {
-      animation-name: drive, bounce;
-      animation-duration: 8s, 0.5s;
-      animation-delay: 2s, 0.1s;
-      fill: #ef4444;
-    }
-
-    .car-icon:nth-child(3) {
-      animation-name: drive, bounce;
-      animation-duration: 10s, 0.5s;
-      animation-delay: 4s, 0.2s;
-      fill: #10b981;
-    }
-
-    @keyframes drive {
-      0% {
-        left: -60px;
-      }
-      100% {
-        left: calc(100% + 60px);
-      }
-    }
-
-    @keyframes bounce {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(-4px);
-      }
-    }
-
-    @keyframes progress {
-      0% {
-        width: 0;
-      }
-      100% {
-        width: 100%;
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes modalSlideIn {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes growWidth {
-      from {
-        width: 0;
-      }
-      to {
-        width: var(--final-width);
-      }
     }
 
     @media (max-width: 768px) {
@@ -617,122 +350,61 @@
         font-size: 14px;
       }
 
-      .container, .calendar-container {
+      .container {
         max-width: 95vw;
-        margin: 1.5vh auto;
         padding: 1.5rem;
       }
 
-      h2, h3 {
-        font-size: 1.3rem;
+      h1 {
+        font-size: 2rem;
       }
 
-      .form-label {
+      .form-control {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+
+      .btn-primary, .btn-danger {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+      }
+
+      .player-info {
         font-size: 0.85rem;
-      }
-
-      .form-control, .form-select, textarea {
-        font-size: 0.85rem;
-        padding: 0.4rem;
-      }
-
-      .btn-primary, .btn-secondary, .btn-danger {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
-      }
-
-      .notification-message {
-        font-size: 0.85rem;
-        padding: 10px;
-        min-height: 50px;
-      }
-
-      .elegant-text {
-        font-size: 0.85rem;
-      }
-
-      .elegant-text span.emoji {
-        font-size: 0.85rem;
-      }
-
-      #calendar {
-        font-size: 0.8rem;
-      }
-
-      .fc-daygrid-day-frame {
-        min-height: 40px;
-      }
-
-      .fc-daygrid-day-number {
-        font-size: 0.75rem;
-      }
-
-      .fc-button {
-        padding: 0.3rem 0.6rem !important;
-        font-size: 0.8rem !important;
-      }
-
-      .fc-toolbar-title {
-        font-size: 0.9rem !important;
-      }
-
-      .modal-dialog {
-        margin: 0.5rem;
-        max-width: 95vw;
-      }
-
-      .modal-body {
-        padding: 0.8rem;
-      }
-
-      .booking-info {
-        font-size: 0.8rem;
         flex-wrap: wrap;
+        gap: 1rem;
       }
 
-      .booking-info div {
+      .player-info div {
         min-width: 100px;
         flex: 1 1 45%;
       }
 
-      .cancel-btn {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
+      .update-form input {
+        width: 80px;
       }
 
-      .timeline-container {
-        height: 60px;
-      }
-
-      .timeline-ticks {
-        font-size: 0.7rem;
-      }
-
-      .timeline-bar {
-        height: 16px;
-        font-size: 0.65rem;
+      .notification-message {
+        font-size: 0.9rem;
+        min-height: 60px;
       }
 
       .progress-container {
-        width: 85%;
-        height: 10px;
+        width: 80%;
+        height: 12px;
       }
 
       .progress-percentage {
-        font-size: 16px;
+        font-size: 1.2rem;
       }
 
-      .time-status {
-        font-size: 0.8rem;
+      .chip-animation {
+        height: 60px;
       }
 
-      .car-animation {
-        height: 50px;
-      }
-
-      .car-icon {
-        width: 50px;
-        height: 25px;
+      .chip-icon {
+        width: 30px;
+        height: 30px;
       }
     }
 
@@ -741,153 +413,96 @@
         font-size: 12px;
       }
 
-      .container, .calendar-container {
+      .container {
         max-width: 98vw;
-        margin: 1vh auto;
         padding: 1rem;
       }
 
-      h2, h3 {
-        font-size: 1.1rem;
+      h1 {
+        font-size: 1.8rem;
       }
 
-      .form-control, .form-select, textarea {
+      .form-control {
+        font-size: 0.85rem;
+      }
+
+      .btn-primary, .btn-danger {
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .player-info {
         font-size: 0.8rem;
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .notification-message {
-        font-size: 0.8rem;
-        padding: 8px;
-        min-height: 48px;
-      }
-
-      .elegant-text {
-        font-size: 0.8rem;
-      }
-
-      .elegant-text span.emoji {
-        font-size: 0.8rem;
-      }
-
-      #calendar {
-        font-size: 0.7rem;
-      }
-
-      .fc-daygrid-day-frame {
-        min-height: 35px;
-      }
-
-      .fc-daygrid-day-number {
-        font-size: 0.7rem;
-      }
-
-      .fc-button {
-        padding: 0.2rem 0.4rem !important;
-        font-size: 0.7rem !important;
-      }
-
-      .fc-toolbar-title {
-        font-size: 0.8rem !important;
-      }
-
-      .booking-info {
-        font-size: 0.75rem;
-      }
-
-      .booking-info div {
+      .player-info div {
         flex: 1 1 100%;
       }
 
-      .booking-info svg {
-        width: 0.9rem;
-        height: 0.9rem;
+      .update-form {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .timeline-container {
-        height: 50px;
+      .update-form input {
+        width: 100%;
       }
 
-      .timeline-ticks {
-        font-size: 0.65rem;
-      }
-
-      .timeline-bar {
-        height: 14px;
-        font-size: 0.6rem;
+      .notification-message {
+        font-size: 0.85rem;
+        min-height: 50px;
       }
 
       .progress-container {
         width: 90%;
-        height: 8px;
+        height: 10px;
       }
 
       .progress-percentage {
-        font-size: 14px;
+        font-size: 1rem;
       }
 
-      .time-status {
-        font-size: 0.75rem;
+      .chip-animation {
+        height: 50px;
       }
 
-      .car-animation {
-        height: 40px;
-      }
-
-      .car-icon {
-        width: 40px;
-        height: 20px;
+      .chip-icon {
+        width: 25px;
+        height: 25px;
       }
     }
 
     @media (min-width: 1200px) {
-      .container, .calendar-container {
+      .container {
         max-width: 80vw;
       }
 
-      h2, h3 {
-        font-size: 1.8rem;
+      h1 {
+        font-size: 3rem;
       }
 
-      .form-control, .form-select, textarea {
+      .form-control {
         font-size: 1rem;
       }
 
-      .btn-primary, .btn-secondary, .btn-danger {
+      .btn-primary, .btn-danger {
         font-size: 1rem;
       }
 
       .notification-message {
         font-size: 1rem;
-        min-height: 64px;
-      }
-
-      .elegant-text {
-        font-size: 1rem;
-      }
-
-      .elegant-text span.emoji {
-        font-size: 1rem;
-      }
-
-      .timeline-ticks {
-        font-size: 0.8rem;
-      }
-
-      .timeline-bar {
-        font-size: 0.75rem;
+        min-height: 80px;
       }
 
       .progress-container {
-        width: 70%;
-        height: 14px;
+        width: 60%;
+        height: 16px;
       }
 
       .progress-percentage {
-        font-size: 20px;
-      }
-
-      .time-status {
-        font-size: 0.9rem;
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -902,181 +517,50 @@
 
   <div id="notification-message" class="notification-message animate__animated"></div>
 
-  <div class="container fade-in" id="login-container">
-    <h2 class="text-center mb-4">登入</h2>
-    <form id="login-form">
-      <div class="mb-3">
-        <label for="username" class="form-label">用戶名</label>
-        <input type="text" class="form-control" id="username" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">密碼</label>
-        <input type="password" class="form-control" id="password" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">登入</button>
-    </form>
-  </div>
-
-  <div class="container" id="booking-container" style="display: none;">
-    <h2 class="text-center mb-4">新可大公務車預約</h2>
-    <form id="booking-form">
-      <div class="mb-3">
-        <label for="department" class="form-label">部門</label>
-        <select class="form-select" id="department" required>
-          <option value="">請選擇部門</option>
-          <option value="總經理室">總經理室</option>
-          <option value="改善事務局">改善事務局</option>
-          <option value="資訊室">資訊室</option>
-          <option value="管理部">管理部</option>
-          <option value="財務部">財務部</option>
-          <option value="業務部">業務部</option>
-          <option value="品保部">品保部</option>
-          <option value="生管部">生管部</option>
-          <option value="倉管課">倉管課</option>
-          <option value="開發部">開發部</option>
-          <option value="生產部">生產部</option>
-          <option value="加工課">加工課</option>
-          <option value="組裝課">組裝課</option>
-          <option value="生技課">生技課</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="name" class="form-label">姓名</label>
-        <input type="text" class="form-control" id="name" required>
-      </div>
-      <div class="mb-3">
-        <label for="date" class="form-label">日期</label>
-        <input type="date" class="form-control" id="date" required>
-      </div>
-      <div class="mb-3">
-        <label for="start-time" class="form-label">開始時間</label>
-        <select class="form-select" id="start-time" required>
-          <option value="">請選擇開始時間</option>
-          <option value="08:00">08:00</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-          <option value="19:00">19:00</option>
-          <option value="20:00">20:00</option>
-        </select>
-        <div id="start-time-status" class="time-status" aria-live="polite"></div>
-      </div>
-      <div class="mb-3">
-        <label for="end-time" class="form-label">結束時間</label>
-        <select class="form-select" id="end-time" required>
-          <option value="">請選擇結束時間</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-          <option value="19:00">19:00</option>
-          <option value="20:00">20:00</option>
-          <option value="21:00">21:00</option>
-        </select>
-        <div id="end-time-status" class="time-status" aria-live="polite"></div>
-      </div>
-      <div class="mb-3">
-        <label for="reason" class="form-label">公出原因</label>
-        <textarea class="form-control" id="reason" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">提交預約</button>
-    </form>
-    <button class="btn btn-secondary w-100 mt-3" id="logout">登出</button>
-  </div>
-
-  <div class="calendar-container" id="calendar-container" style="display: none;">
-    <div class="car-animation">
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">
-        <path d="M15 20a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-        <path d="M10 14h40v6H10z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <path d="M15 8h30l5 6H10l5-6z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <rect x="20" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <rect x="32" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <circle cx="15" cy="20" r="3" fill="#333333"/>
-        <circle cx="45" cy="20" r="3" fill="#333333"/>
-        <path d="M50 12l2-2" stroke="#ffff00" stroke-width="1"/>
-        <path d="M10 12l-2-2" stroke="#ffff00" stroke-width="1"/>
+  <div class="container fade-in">
+    <div class="chip-animation">
+      <svg class="chip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="currentColor" stroke="#fff" stroke-width="1"/>
+        <text x="12" y="16" font-size="8" text-anchor="middle" fill="#fff">♠</text>
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">
-        <path d="M15 20a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-        <path d="M10 14h40v6H10z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <path d="M15 8h30l5 6H10l5-6z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <rect x="20" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <rect x="32" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <circle cx="15" cy="20" r="3" fill="#333333"/>
-        <circle cx="45" cy="20" r="3" fill="#333333"/>
-        <path d="M50 12l2-2" stroke="#ffff00" stroke-width="1"/>
-        <path d="M10 12l-2-2" stroke="#ffff00" stroke-width="1"/>
+      <svg class="chip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="currentColor" stroke="#fff" stroke-width="1"/>
+        <text x="12" y="16" font-size="8" text-anchor="middle" fill="#fff">♥</text>
       </svg>
-      <svg class="car-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">
-        <path d="M15 20a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-        <path d="M10 14h40v6H10z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <path d="M15 8h30l5 6H10l5-6z" fill="#ffffff" stroke="#000000" stroke-width="0.5"/>
-        <rect x="20" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <rect x="32" y="10" width="8" height="4" fill="#a0c8ff"/>
-        <circle cx="15" cy="20" r="3" fill="#333333"/>
-        <circle cx="45" cy="20" r="3" fill="#333333"/>
-        <path d="M50 12l2-2" stroke="#ffff00" stroke-width="1"/>
-        <path d="M10 12l-2-2" stroke="#ffff00" stroke-width="1"/>
+      <svg class="chip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="currentColor" stroke="#fff" stroke-width="1"/>
+        <text x="12" y="16" font-size="8" text-anchor="middle" fill="#fff">♣</text>
       </svg>
     </div>
-    <h3 class="text-center mb-4">預約日曆</h3>
-    <button class="btn btn-primary mt-2" id="refresh-calendar">刷新日曆</button>
-    <div id="calendar"></div>
-  </div>
-
-  <div class="modal fade" id="bookingsModal" tabindex="-1" aria-labelledby="bookingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookingsModalLabel">當天預約詳情</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="loading">載入中...</div>
-          <div id="timeline-container" class="timeline-container" style="display: none;"></div>
-          <div id="bookings-list"></div>
-          <div id="no-bookings" class="no-bookings" style="display: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm3 3H4v13h16V6zm-10 7h4v4h-4v-4z"/></svg>
-            <p>當天無預約</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-        </div>
+    <h1>撲克籌碼記錄系統</h1>
+    <form id="add-player-form" class="mb-5">
+      <div class="mb-3">
+        <label for="new-name" class="form-label">新增玩家姓名</label>
+        <input type="text" class="form-control" id="new-name" placeholder="輸入玩家姓名" required>
       </div>
+      <button type="submit" class="btn btn-primary w-100">新增玩家</button>
+    </form>
+    <div id="player-list" class="player-list">
+      <!-- Player cards will be dynamically inserted here -->
     </div>
   </div>
 
-  <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="cancelModalLabel">確認取消預約</h5>
+        <div class="modal-header" style="background: #3b82f6; color: #fff; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+          <h5 class="modal-title" id="deleteModalLabel">確認刪除玩家</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>請輸入取消密碼以確認取消預約</p>
-          <form id="cancel-form">
+          <p>請輸入刪除密碼以確認刪除玩家</p>
+          <form id="delete-form">
             <div class="mb-3">
-              <label for="cancel-password" class="form-label">取消密碼</label>
-              <input type="password" class="form-control" id="cancel-password" required>
+              <label for="delete-password" class="form-label">刪除密碼</label>
+              <input type="password" class="form-control" id="delete-password" required>
             </div>
-            <input type="hidden" id="cancel-booking-id">
-            <button type="submit" class="btn btn-danger w-100">確認取消</button>
+            <input type="hidden" id="delete-player-id">
+            <button type="submit" class="btn btn-danger w-100">確認刪除</button>
           </form>
         </div>
       </div>
@@ -1084,61 +568,18 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
   <script>
-    // 全局變數和常量
-    const loginContainer = document.getElementById('login-container');
-    const bookingContainer = document.getElementById('booking-container');
-    const calendarContainer = document.getElementById('calendar-container');
+    const addPlayerForm = document.getElementById('add-player-form');
+    const playerList = document.getElementById('player-list');
+    const deleteForm = document.getElementById('delete-form');
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
     const loadingOverlay = document.getElementById('loading-overlay');
     const progressPercentage = document.querySelector('.progress-percentage');
-    const loginForm = document.getElementById('login-form');
-    const bookingForm = document.getElementById('booking-form');
-    const cancelForm = document.getElementById('cancel-form');
-    const logoutBtn = document.getElementById('logout');
-    const dateInput = document.getElementById('date');
-    const startTimeSelect = document.getElementById('start-time');
-    const endTimeSelect = document.getElementById('end-time');
-    const startTimeStatus = document.getElementById('start-time-status');
-    const endTimeStatus = document.getElementById('end-time-status');
-    const bookingsModal = new bootstrap.Modal(document.getElementById('bookingsModal'));
-    const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
 
-    const timeSlots = [
-      '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
-      '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
-    ];
-
-    const users = [
-      { username: "S1234", password: "S1234" },
-      { username: "00000", password: "00000" }
-    ];
-
-    let cachedBookings = null;
+    let cachedPlayers = null;
     let cacheTimestamp = null;
     const CACHE_DURATION = 60 * 1000;
 
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
-
-    // 將時間轉為分鐘數
-    const toMinutes = (time) => {
-      if (!time || typeof time !== 'string') return 0;
-      const [hours, minutes] = time.split(':').map(Number);
-      return hours * 60 + minutes;
-    };
-
-    // 檢查時間衝突
-    const isConflict = (newStart, newEnd, existingStart, existingEnd) => {
-      if (!newStart || !newEnd || !existingStart || !existingEnd) return false;
-      const newStartMin = toMinutes(newStart);
-      const newEndMin = toMinutes(newEnd);
-      const existingStartMin = toMinutes(existingStart);
-      const existingEndMin = toMinutes(existingEnd);
-      return !(newEndMin <= existingStartMin || newStartMin >= existingEndMin);
-    };
-
-    // 顯示通知訊息
     function showNotification(message, isSuccess) {
       const notification = document.getElementById('notification-message');
       notification.innerHTML = '';
@@ -1160,7 +601,6 @@
       }, 2000);
     }
 
-    // 顯示載入動畫
     function showLoadingOverlay() {
       loadingOverlay.classList.add('show');
       progressPercentage.textContent = '0%';
@@ -1172,632 +612,188 @@
         } else {
           clearInterval(interval);
         }
-      }, 8);
+      }, 10);
     }
 
-    // 隱藏載入動畫
     function hideLoadingOverlay() {
       loadingOverlay.classList.remove('show');
     }
 
-    // 獲取預約資料
-    async function fetchBookings() {
+    async function fetchPlayers() {
       const now = Date.now();
-      if (cachedBookings && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
-        return cachedBookings;
+      if (cachedPlayers && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
+        return cachedPlayers;
       }
       try {
-        const response = await fetch('/api/bookings');
+        showLoadingOverlay();
+        const response = await fetch('/api/players');
         if (!response.ok) {
           throw new Error(`HTTP 錯誤，狀態碼：${response.status}`);
         }
         const data = await response.json();
-        cachedBookings = Array.isArray(data) ? data : [];
+        cachedPlayers = Array.isArray(data) ? data : [];
         cacheTimestamp = now;
-        return cachedBookings;
+        hideLoadingOverlay();
+        return cachedPlayers;
       } catch (error) {
-        console.error('Error fetching bookings:', error);
-        showNotification(`❗ 無法載入預約資料：${error.message}`, false);
+        console.error('Error fetching players:', error);
+        showNotification(`❗ 無法載入玩家資料：${error.message}`, false);
+        hideLoadingOverlay();
         return [];
       }
     }
 
-    // 更新時間選項可用性
-    async function updateTimeOptions() {
-      const selectedDate = dateInput.value;
-      if (!selectedDate) {
-        startTimeSelect.innerHTML = '<option value="">請選擇開始時間</option>' + timeSlots.slice(0, -1).map(slot => `<option value="${slot}">${slot}</option>`).join('');
-        endTimeSelect.innerHTML = '<option value="">請選擇結束時間</option>' + timeSlots.slice(1).map(slot => `<option value="${slot}">${slot}</option>`).join('');
-        startTimeStatus.textContent = '';
-        endTimeStatus.textContent = '';
-        return;
-      }
-
+    async function renderPlayerList() {
       try {
-        showLoadingOverlay();
-        const bookings = await fetchBookings();
-        const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-
-        // 重置開始時間選項
-        startTimeSelect.innerHTML = '<option value="">請選擇開始時間</option>';
-        timeSlots.slice(0, -1).forEach(slot => {
-          const isBooked = filteredBookings.some(booking => isConflict(slot, timeSlots[timeSlots.indexOf(slot) + 1], booking.starttime?.slice(0, 5), booking.endtime?.slice(0, 5)));
-          const option = document.createElement('option');
-          option.value = slot;
-          option.textContent = isBooked ? `${slot} ` : slot;
-          option.disabled = isBooked;
-          option.setAttribute('aria-disabled', isBooked ? 'true' : 'false');
-          startTimeSelect.appendChild(option);
-        });
-
-        // 重置結束時間選項
-        updateEndTimeOptions();
-        validateTimeSelection();
-
-        hideLoadingOverlay();
+        const players = await fetchPlayers();
+        playerList.innerHTML = players.map((player, index) => `
+          <div class="player-card" style="animation-delay: ${index * 0.1}s;">
+            <div class="player-info">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
+                ${player.name || '未知'}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-13v6h2V7h-2zm1 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                伏地挺身: ${player.pushups}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-13v6h2V7h-2zm1 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                深蹲: ${player.squats}
+              </div>
+            </div>
+            <div class="update-form">
+              <input type="number" min="0" class="form-control" placeholder="伏地挺身" aria-label="Update pushups for ${player.name}">
+              <input type="number" min="0" class="form-control" placeholder="深蹲" aria-label="Update squats for ${player.name}">
+              <button class="btn btn-primary" onclick="updatePlayer(${player.id}, this.parentElement)">更新</button>
+              <button class="btn btn-danger" onclick="showDeleteModal(${player.id})">刪除</button>
+            </div>
+          </div>
+        `).join('');
       } catch (error) {
-        console.error('Error updating time options:', error);
-        showNotification('❗ 無法檢查時間可用性，請稍後重試', false);
-        hideLoadingOverlay();
+        console.error('Error rendering player list:', error);
+        showNotification(`❗ 無法顯示玩家列表：${error.message}`, false);
       }
     }
 
-    // 更新結束時間選項
-    function updateEndTimeOptions() {
-      const startTime = startTimeSelect.value;
-      endTimeSelect.innerHTML = '<option value="">請選擇結束時間</option>';
-      const startIndex = timeSlots.indexOf(startTime);
-      if (startIndex === -1) {
-        timeSlots.slice(1).forEach(slot => {
-          const option = document.createElement('option');
-          option.value = slot;
-          option.textContent = slot;
-          endTimeSelect.appendChild(option);
-        });
-        return;
-      }
-
-      const selectedDate = dateInput.value;
-      const bookings = cachedBookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-
-      timeSlots.slice(startIndex + 1).forEach(slot => {
-        const isBooked = bookings.some(booking => isConflict(startTime, slot, booking.starttime?.slice(0, 5), booking.endtime?.slice(0, 5)));
-        const option = document.createElement('option');
-        option.value = slot;
-        option.textContent = isBooked ? `${slot} ` : slot;
-        option.disabled = isBooked;
-        option.setAttribute('aria-disabled', isBooked ? 'true' : 'false');
-        endTimeSelect.appendChild(option);
-      });
-    }
-
-    // 驗證時間選擇
-    function validateTimeSelection() {
-      const startTime = startTimeSelect.value;
-      const endTime = endTimeSelect.value;
-      const selectedDate = dateInput.value;
-
-      if (!selectedDate || !startTime || !endTime) {
-        startTimeStatus.textContent = '';
-        endTimeStatus.textContent = '';
-        return;
-      }
-
-      const bookings = cachedBookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-      const hasConflict = bookings.some(booking => isConflict(startTime, endTime, booking.starttime?.slice(0, 5), booking.endtime?.slice(0, 5)));
-
-      if (hasConflict) {
-        startTimeStatus.textContent = '此時段已被預約';
-        startTimeStatus.className = 'time-status unavailable';
-        endTimeStatus.textContent = '請選擇其他時間';
-        endTimeStatus.className = 'time-status unavailable';
-      } else {
-        startTimeStatus.textContent = '此時段可用';
-        startTimeStatus.className = 'time-status available';
-        endTimeStatus.textContent = '此時段可用';
-        endTimeStatus.className = 'time-status available';
-      }
-    }
-
-    // 防抖函數
-    function debounce(func, wait) {
-      let timeout;
-      return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-      };
-    }
-
-    // 登入處理
-    function handleLogin(e) {
+    async function handleAddPlayer(e) {
       e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if (!username || !password) {
-        showNotification('❗ 請輸入用戶名和密碼', false);
+      const name = document.getElementById('new-name').value.trim();
+      if (!name) {
+        showNotification('❗ 請輸入玩家姓名', false);
         return;
       }
-
-      const user = users.find(u => u.username === username && u.password === password);
-      if (user) {
-        localStorage.setItem('token', 'mock-token');
-        localStorage.setItem('username', username);
-        loginContainer.style.display = 'none';
-        showLoadingOverlay();
-        bookingContainer.style.display = 'block';
-        calendarContainer.style.display = 'block';
-        bookingContainer.classList.add('fade-in');
-        calendarContainer.classList.add('fade-in');
-        setTimeout(() => {
-          setupCalendarObserver();
-          hideLoadingOverlay();
-        }, 800);
-      } else {
-        showNotification('❗ 用戶名或密碼錯誤', false);
-      }
-    }
-
-    // 登出處理
-    function handleLogout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      cachedBookings = null;
-      cacheTimestamp = null;
-      bookingContainer.style.display = 'none';
-      calendarContainer.style.display = 'none';
-      loginContainer.style.display = 'block';
-      loginContainer.classList.add('fade-in');
-    }
-
-    // 提交預約
-    async function handleBookingSubmit(e) {
-      e.preventDefault();
-      const startTime = startTimeSelect.value;
-      const endTime = endTimeSelect.value;
-      const selectedDate = dateInput.value;
-      const department = document.getElementById('department').value;
-      const name = document.getElementById('name').value.trim();
-      const reason = document.getElementById('reason').value.trim();
-
-      if (!department || !name || !reason) {
-        showNotification('❗ 請填寫所有必填欄位', false);
-        return;
-      }
-
-      const todayDate = new Date();
-      todayDate.setHours(0, 0, 0, 0);
-      const bookingDate = new Date(selectedDate);
-
-      if (bookingDate < todayDate) {
-        showNotification('❗ 無法預約過去的日期，請選擇未來的日期', false);
-        return;
-      }
-
-      if (!startTime || !endTime || startTime >= endTime) {
-        showNotification('❗ 請選擇有效的時間區段（結束時間必須晚於開始時間）', false);
-        return;
-      }
-
-      const bookings = await fetchBookings();
-      const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-
-      let hasConflict = filteredBookings.some(b => isConflict(startTime, endTime, b.starttime?.slice(0, 5), b.endtime?.slice(0, 5)));
-      if (hasConflict) {
-        showNotification('❗ 所選時間區段與現有預約衝突，請選擇其他時間', false);
-        return;
-      }
-
-      const booking = {
-        department,
-        name,
-        date: selectedDate,
-        startTime: startTime + ':00',
-        endTime: endTime + ':00',
-        reason
-      };
-
       try {
-        const response = await fetch('/api/bookings', {
+        showLoadingOverlay();
+        const response = await fetch('/api/players', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(booking)
+          body: JSON.stringify({ name })
         });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || '提交預約失敗');
+          throw new Error(errorData.error || '新增玩家失敗');
         }
-        showNotification('✅ 預約提交成功', true);
-        bookingForm.reset();
-        cachedBookings = null;
+        showNotification('✅ 玩家新增成功', true);
+        document.getElementById('new-name').value = '';
+        cachedPlayers = null;
         cacheTimestamp = null;
-        await updateCalendarColors();
-        updateTimeOptions();
+        await renderPlayerList();
       } catch (error) {
-        console.error('Error submitting booking:', error);
-        showNotification(`❗ 提交預約失敗：${error.message}`, false);
+        console.error('Error adding player:', error);
+        showNotification(`❗ 新增玩家失敗：${error.message}`, false);
+      } finally {
+        hideLoadingOverlay();
       }
     }
 
-    // 取消預約後更新資料
-    async function updateAfterCancel(selectedDate) {
+    async function updatePlayer(playerId, formElement) {
+      const pushupsInput = formElement.querySelector('input[placeholder="伏地挺身"]');
+      const squatsInput = formElement.querySelector('input[placeholder="深蹲"]');
+      const pushups = pushupsInput.value ? parseInt(pushupsInput.value) : undefined;
+      const squats = squatsInput.value ? parseInt(squatsInput.value) : undefined;
+
+      if (pushups === undefined && squats === undefined) {
+        showNotification('❗ 請至少輸入一個更新值', false);
+        return;
+      }
+
       try {
-        const bookings = await fetchBookings();
-        const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-        renderBookingsList(filteredBookings, selectedDate);
-        await updateCalendarColors();
-        if (dateInput.value === selectedDate) {
-          updateTimeOptions();
+        showLoadingOverlay();
+        const response = await fetch(`/api/players/${playerId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pushups, squats })
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || '更新玩家失敗');
         }
+        showNotification('✅ 玩家資料更新成功', true);
+        pushupsInput.value = '';
+        squatsInput.value = '';
+        cachedPlayers = null;
+        cacheTimestamp = null;
+        await renderPlayerList();
       } catch (error) {
-        console.error('Error updating after cancel:', error);
-        showNotification(`❗ 更新預約資料失敗：${error.message}`, false);
+        console.error('Error updating player:', error);
+        showNotification(`❗ 更新玩家失敗：${error.message}`, false);
+      } finally {
+        hideLoadingOverlay();
       }
     }
 
-    // 取消預約
-    async function handleCancelSubmit(e) {
+    async function handleDeletePlayer(e) {
       e.preventDefault();
-      const password = document.getElementById('cancel-password').value.trim();
-      const bookingId = document.getElementById('cancel-booking-id').value;
+      const password = document.getElementById('delete-password').value.trim();
+      const playerId = document.getElementById('delete-player-id').value;
 
       if (!password) {
-        showNotification('❗ 請輸入取消密碼', false);
-        return;
-      }
-
-      if (!bookingId) {
-        cancelModal.hide();
-        showNotification('❗ 錯誤：無效的預約ID', false);
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        cancelModal.hide();
-        showNotification('❗ 錯誤：未找到身份驗證令牌，請重新登錄', false);
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        bookingContainer.style.display = 'none';
-        calendarContainer.style.display = 'none';
-        loginContainer.style.display = 'block';
-        loginContainer.classList.add('fade-in');
+        showNotification('❗ 請輸入刪除密碼', false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/bookings/${bookingId}`, {
+        showLoadingOverlay();
+        const response = await fetch(`/api/players/${playerId}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
         });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || '取消預約失敗');
+          throw new Error(errorData.error || '刪除玩家失敗');
         }
-        cancelModal.hide();
-        showNotification('✅ 預約已成功取消！', true);
-        cachedBookings = null;
+        showNotification('✅ 玩家刪除成功', true);
+        document.getElementById('delete-password').value = '';
+        cachedPlayers = null;
         cacheTimestamp = null;
-        const selectedDate = document.getElementById('bookingsModalLabel').textContent.split(' ')[0];
-        await updateAfterCancel(selectedDate);
+        await renderPlayerList();
+        deleteModal.hide();
       } catch (error) {
-        console.error('Error canceling booking:', error);
-        cancelModal.hide();
-        showNotification(`❗ 取消預約失敗：${error.message}`, false);
+        console.error('Error deleting player:', error);
+        showNotification(`❗ 刪除玩家失敗：${error.message}`, false);
       } finally {
-        document.getElementById('cancel-password').value = '';
+        hideLoadingOverlay();
       }
     }
 
-    // 渲染預約列表
-    function renderBookingsList(bookings, date) {
-      const bookingsList = document.getElementById('bookings-list');
-      const noBookings = document.getElementById('no-bookings');
-      const timelineContainer = document.getElementById('timeline-container');
-
-      if (!bookings || bookings.length === 0) {
-        bookingsList.style.display = 'none';
-        timelineContainer.style.display = 'none';
-        noBookings.style.display = 'block';
-        noBookings.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm3 3H4v13h16V6zm-10 7h4v4h-4v-4z"/></svg><p>當天無預約</p>';
-        return;
-      }
-
-      bookingsList.style.display = 'block';
-      timelineContainer.style.display = 'block';
-      noBookings.style.display = 'none';
-
-      const totalHours = timeSlots.length - 1;
-      timelineContainer.innerHTML = `
-        <div class="timeline">
-          <div class="timeline-ticks">
-            ${timeSlots.map(slot => `<div class="timeline-tick">${slot}</div>`).join('')}
-          </div>
-          ${bookings.map(booking => {
-            const startIndex = timeSlots.indexOf(booking.starttime?.slice(0, 5) || '08:00');
-            const endIndex = timeSlots.indexOf(booking.endtime?.slice(0, 5) || '09:00');
-            const left = (startIndex / totalHours) * 100;
-            const width = ((endIndex - startIndex) / totalHours) * 100;
-            return `
-              <div class="timeline-bar" style="left: ${left}%; --final-width: ${width}%;" 
-                   data-bs-toggle="tooltip" data-bs-placement="top"
-                   title="${booking.department} (${booking.name}) ${booking.starttime?.slice(0, 5) || '未知'}-${booking.endtime?.slice(0, 5) || '未知'}: ${booking.reason}">
-                ${booking.department}
-              </div>`;
-          }).join('')}
-        </div>
-      `;
-
-      const tooltipTriggerList = timelineContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
-      tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-
-      bookings.sort((a, b) => {
-        const aSum = toMinutes(a.starttime || '08:00') + toMinutes(a.endtime || '09:00');
-        const bSum = toMinutes(b.starttime || '08:00') + toMinutes(b.endtime || '09:00');
-        return aSum - bSum;
-      });
-
-      bookingsList.innerHTML = bookings.map((booking, index) => {
-        const bookingId = booking.id;
-        if (!bookingId) {
-          console.warn('預約缺少 id 屬性:', booking);
-          return `
-            <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
-              <div class="booking-info">
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
-                  ${booking.department || '未知'}
-                </div>
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
-                  ${booking.name || '未知'}
-                </div>
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
-                  ${booking.starttime?.slice(0, 5) || '未知'}-${booking.endtime?.slice(0, 5) || '未知'}
-                </div>
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
-                  ${booking.reason || '無'}
-                </div>
-              </div>
-              <span class="text-danger cancel-btn">無法取消</span>
-            </div>`;
-        }
-        return `
-          <div class="booking-card" style="animation-delay: ${index * 0.1}s;">
-            <div class="booking-info">
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
-                ${booking.department || '未知'}
-              </div>
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h2V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3zm-7 8v8h14v-8H5z"/></svg>
-                ${booking.name || '未知'}
-              </div>
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h10v2zm-1 5H8v2h8V8zm0 4H8v2h8v-2zm-8 4h8v2H8v-2z"/></svg>
-                ${booking.starttime?.slice(0, 5) || '未知'}-${booking.endtime?.slice(0, 5) || '未知'}
-              </div>
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
-                ${booking.reason || '無'}
-              </div>
-            </div>
-            <button class="btn btn-danger cancel-btn" data-booking-id="${bookingId}" onclick="showCancelModal('${bookingId}')">取消</button>
-          </div>`;
-      }).join('');
+    function showDeleteModal(playerId) {
+      document.getElementById('delete-player-id').value = playerId;
+      deleteModal.show();
     }
 
-    // 顯示取消模態框
-    function showCancelModal(bookingId) {
-      if (!bookingId) {
-        console.error('showCancelModal 接收到無效的 bookingId:', bookingId);
-        showNotification('❗ 錯誤：無法顯示取消視窗，預約ID無效', false);
-        return;
-      }
-      const cancelBookingIdInput = document.getElementById('cancel-booking-id');
-      cancelBookingIdInput.value = bookingId;
-      cancelModal.show();
-    }
-
-    // 初始化日曆
-    function initCalendar() {
-      const calendarEl = document.getElementById('calendar');
-      if (!calendarEl) {
-        console.error('Calendar element not found');
-        showNotification('❗ 初始化日曆失敗：無法找到日曆元素', false);
-        return;
-      }
-
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        initialDate: new Date(),
-        dateClick: async function(info) {
-          const selectedDate = info.dateStr;
-          document.querySelector('.loading').style.display = 'block';
-          document.getElementById('bookings-list').style.display = 'none';
-          document.getElementById('no-bookings').style.display = 'none';
-          document.getElementById('timeline-container').style.display = 'none';
-          try {
-            const bookings = await fetchBookings();
-            const filteredBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === selectedDate);
-            renderBookingsList(filteredBookings, selectedDate);
-            document.getElementById('bookingsModalLabel').textContent = `${selectedDate} 的預約`;
-            document.querySelector('.loading').style.display = 'none';
-            bookingsModal.show();
-          } catch (error) {
-            console.error('載入預約錯誤:', error);
-            document.querySelector('.loading').style.display = 'none';
-            document.getElementById('no-bookings').style.display = 'block';
-            document.getElementById('no-bookings').innerHTML = `<p>無法載入預約資料：${error.message}</p>`;
-          }
-        },
-        events: [],
-        datesSet: async function(info) {
-          await updateCalendarColors();
-        }
-      });
-
-      calendar.render();
-      calendarEl._calendar = calendar;
-
-      calendarEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          const activeElement = document.activeElement;
-          if (activeElement.classList.contains('fc-daygrid-day')) {
-            const date = activeElement.getAttribute('data-date');
-            calendar.select(date);
-            activeElement.click();
-          }
-        }
-      });
-    }
-
-    // 更新日曆顏色
-    async function updateCalendarColors() {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        showNotification('❗ 錯誤：未找到身份驗證令牌，請重新登錄', false);
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        bookingContainer.style.display = 'none';
-        calendarContainer.style.display = 'none';
-        loginContainer.style.display = 'block';
-        loginContainer.classList.add('fade-in');
-        return;
-      }
-
-      const bookings = await fetchBookings();
-      const calendarEl = document.getElementById('calendar');
-      const calendar = calendarEl?._calendar;
-      if (!calendar) {
-        console.warn('Calendar not initialized');
-        showNotification('❗ 日曆未初始化', false);
-        return;
-      }
-
-      calendar.getEvents().forEach(event => event.remove());
-
-      bookings.forEach(booking => {
-        const startTime = booking.starttime?.slice(0, 5) || '未知';
-        const endTime = booking.endtime?.slice(0, 5) || '未知';
-        const date = new Date(booking.date).toISOString().split('T')[0];
-
-        calendar.addEvent({
-          title: `${booking.department || '未知'} (${startTime}-${endTime})`,
-          start: date,
-          allDay: true,
-          classNames: ['bg-booked'],
-          extendedProps: {
-            department: booking.department || '未知',
-            name: booking.name || '未知',
-            reason: booking.reason || '無'
-          }
-        });
-      });
-
-      const bookedDates = [...new Set(bookings.map(b => new Date(b.date).toISOString().split('T')[0]))];
-      const todayStr = new Date().toISOString().split('T')[0];
-      const days = document.querySelectorAll('.fc-daygrid-day');
-      days.forEach(day => {
-        const date = day.getAttribute('data-date');
-        const dayFrame = day.querySelector('.fc-daygrid-day-frame');
-        day.setAttribute('tabindex', '0');
-        day.setAttribute('aria-label', `日期 ${date}${bookedDates.includes(date) ? '，有預約' : '，可預約'}`);
-
-        if (date === todayStr) {
-          day.classList.add('today');
-        } else {
-          day.classList.remove('today');
-        }
-
-        if (bookedDates.includes(date)) {
-          day.classList.add('bg-booked');
-          day.classList.remove('available');
-          const dayBookings = bookings.filter(b => new Date(b.date).toISOString().split('T')[0] === date);
-          dayBookings.sort((a, b) => {
-            const aSum = toMinutes(a.starttime || '08:00') + toMinutes(a.endtime || '09:00');
-            const bSum = toMinutes(b.starttime || '08:00') + toMinutes(b.endtime || '09:00');
-            return aSum - bSum;
-          });
-          if (dayFrame) {
-            dayFrame.setAttribute('data-bs-toggle', 'tooltip');
-            dayFrame.setAttribute('data-bs-placement', 'top');
-            dayFrame.setAttribute('title', dayBookings
-              .map(b => `${b.department || '未知'} ${b.starttime?.slice(0, 5) || '未知'}-${b.endtime?.slice(0, 5) || '未知'}: ${b.reason || '無'}`)
-              .join('\n'));
-          }
-        } else {
-          day.classList.remove('bg-booked');
-          day.classList.add('available');
-          if (dayFrame) {
-            dayFrame.style.backgroundColor = '';
-            dayFrame.removeAttribute('data-bs-toggle');
-            dayFrame.removeAttribute('data-bs-placement');
-            dayFrame.removeAttribute('title');
-          }
-        }
-      });
-
-      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    }
-
-    // 初始化與事件綁定
-    function setupCalendarObserver() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            initCalendar();
-            observer.disconnect();
-          }
-        });
-      }, { threshold: 0.1 });
-
-      observer.observe(calendarContainer);
-    }
-
-    // 初始化事件監聽器
-    function initEventListeners() {
-      loginForm.addEventListener('submit', handleLogin);
-      logoutBtn.addEventListener('click', handleLogout);
-      bookingForm.addEventListener('submit', handleBookingSubmit);
-      cancelForm.addEventListener('submit', handleCancelSubmit);
-      document.getElementById('refresh-calendar').addEventListener('click', () => {
-        cachedBookings = null;
-        cacheTimestamp = null;
-        updateCalendarColors();
-      });
-      dateInput.addEventListener('change', debounce(updateTimeOptions, 300));
-      startTimeSelect.addEventListener('change', () => {
-        updateEndTimeOptions();
-        validateTimeSelection();
-      });
-      endTimeSelect.addEventListener('change', validateTimeSelection);
-    }
-
-    // 初始化應用程式
     function initApp() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        loginContainer.style.display = 'none';
-        showLoadingOverlay();
-        bookingContainer.style.display = 'block';
-        calendarContainer.style.display = 'block';
-        bookingContainer.classList.add('fade-in');
-        calendarContainer.classList.add('fade-in');
-        setTimeout(() => {
-          setupCalendarObserver();
-          hideLoadingOverlay();
-        }, 800);
-      }
-      initEventListeners();
+      addPlayerForm.addEventListener('submit', handleAddPlayer);
+      deleteForm.addEventListener('submit', handleDeletePlayer);
+      renderPlayerList();
+      document.querySelector('.container').classList.add('fade-in');
     }
 
-    // 啟動應用程式
     initApp();
+
+    window.updatePlayer = updatePlayer;
+    window.showDeleteModal = showDeleteModal;
   </script>
 </body>
 </html>
